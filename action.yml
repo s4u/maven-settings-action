@@ -1,6 +1,10 @@
 name: 'maven-setings-action'
 description: 'Prepare maven settings.xml'
 
+branding:
+  icon: 'settings'
+  color: 'green'
+
 inputs:
   servers:
     description: 'servers definition in joson array, eg: [{"id": "serverId", "username": "username", "password": "password"}]'
