@@ -1,0 +1,19 @@
+name: "Test Action"
+on:
+  pull_request:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: npm ci
+    - run: npm test
+    - uses: ./
+      with:
+        servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
+        properties: '[{"prop1": "value1"}, {"prop2": "value2"}]'
+        sonatype-snapshots: true
+
+    - run: cat ~/.m2/settings.xml

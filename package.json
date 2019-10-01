@@ -1,0 +1,35 @@
+{
+  "name": "maven-settings-action",
+  "version": "1.0.0",
+  "description": "Prepare maven settings",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js settings.js",
+    "test": "eslint index.js settings.js && jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s4u/maven-settings-action.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "Setup",
+    "Maven"
+  ],
+  "author": "S. Jaranowski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/s4u/maven-settings-action/issues"
+  },
+  "homepage": "https://github.com/s4u/maven-settings-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.1.2",
+    "xmldom": "^0.1.27",
+    "xpath": "0.0.27"
+  },
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "jest": "^24.9.0"
+  }
+}
