@@ -34,7 +34,7 @@ Create ```settings.xml``` with https://oss.sonatype.org/content/repositories/sna
 steps:
 - uses: s4u/maven-settings-action@v1
   with:
-    sonatype-snapshots: true
+    sonatypeSnapshots: true
 ```
 
 # License

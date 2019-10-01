@@ -8,7 +8,7 @@ inputs:
   properties:
     description: 'json array with properties, eg [{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
     required: false
-  sonatype-snapshots:
+  sonatypeSnapshots:
     description: 'add https://oss.sonatype.org/content/repositories/snapshots to repository list - true or false'
     default: "false"
     required: false

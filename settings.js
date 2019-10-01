@@ -66,6 +66,7 @@ function fillProperties(template) {
         .select(`/settings/profiles/profile[id[contains(text(),"_properties_")]]/properties`, template)[0];
 
     JSON.parse(properties).forEach((property) => {
+
         for (const key in property) {
             const keyXml = template.createElement(key);
             keyXml.textContent = property[key];
@@ -75,7 +76,7 @@ function fillProperties(template) {
 }
 
 function addSonatypeSnapshots(template) {
-    const val = core.getInput('sonatype-snapshots');
+    const val = core.getInput('sonatypeSnapshots');
     if (val && val.toLocaleLowerCase() == 'true') {
         activateProfile(template, '_sonatype-snapshots_')
     }

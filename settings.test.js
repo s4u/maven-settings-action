@@ -82,7 +82,7 @@ test('fillServers two servers', () => {
 
 test('addSonatypeSnapshots activate', () => {
 
-    process.env['INPUT_SONATYPE-SNAPSHOTS'] = "true";
+    process.env['INPUT_SONATYPESNAPSHOTS'] = "true";
 
     settings.addSonatypeSnapshots(xmlTestProfile);
 

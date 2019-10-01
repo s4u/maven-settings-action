@@ -40,3 +40,15 @@ test('run with default values', () => {
     expect(settingsStatus.isFile()).toBeTruthy();
     expect(settingsStatus.size).toBeGreaterThan(0);
 })
+
+test('run with all feature', () => {
+
+    process.env['INPUT_SERVERES'] =  '[{"id": "serverId", "username": "username", "password": "password"}]';
+    process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
+    process.env['INPUT_SONATYPESNAPSHOT'] = true;
+
+    console.log(cp.execSync(`node ${indexPath}`, { env: process.env }).toString());
+    const settingsStatus = fs.lstatSync(settingsPath);
+    expect(settingsStatus.isFile()).toBeTruthy();
+    expect(settingsStatus.size).toBeGreaterThan(0);
+})
