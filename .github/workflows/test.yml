@@ -5,11 +5,18 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
     steps:
     - uses: actions/checkout@v1
-    - run: npm ci
+    - run: npm version
+    - run: npm install
     - run: npm test
+
     - uses: ./
       with:
         servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
@@ -17,3 +24,4 @@ jobs:
         sonatypeSnapshots: true
 
     - run: cat ~/.m2/settings.xml
+      shell: bash
