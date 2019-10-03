@@ -13,6 +13,7 @@ beforeAll(() => {
     }
 
     process.env['HOME'] = testHomePath;
+    process.env['USERPROFILE'] = testHomePath;
 });
 
 afterEach(() => {

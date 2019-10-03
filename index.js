@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const settings = require('./settings');
 
 
@@ -8,13 +9,7 @@ const settings = require('./settings');
 async function run() {
 
   try {
-    var settingsPath;
-    try {
-      settingsPath= path.join(process.env['HOME'], '.m2', 'settings.xml');
-    } catch (error) {
-      console.log("HOME=" + process.env['HOME']);
-      throw error;
-    }
+    const settingsPath = path.join(os.homedir(), '.m2', 'settings.xml');
 
     core.info('Prepare maven setings: ' + settingsPath);
 
