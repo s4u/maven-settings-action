@@ -1,4 +1,5 @@
 # maven-settings-action
+[![Test Action](https://github.com/s4u/maven-settings-action/workflows/Test%20Action/badge.svg)](https://github.com/s4u/maven-settings-action/actions)
 
 This action setup maven environment for use in action by:
  - create maven setings.xml
