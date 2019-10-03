@@ -8,10 +8,17 @@ const settings = require('./settings');
 async function run() {
 
   try {
-    const settingsPath = path.join(process.env.HOME, '.m2', 'settings.xml');
-    core.info('Prepare maven setings: ' +  settingsPath);
+    var settingsPath;
+    try {
+      settingsPath= path.join(process.env['HOME'], '.m2', 'settings.xml');
+    } catch (error) {
+      console.log("HOME=" + process.env['HOME']);
+      throw error;
+    }
 
-    if ( fs.existsSync(settingsPath) ) {
+    core.info('Prepare maven setings: ' + settingsPath);
+
+    if (fs.existsSync(settingsPath)) {
       core.warning('maven settings.xml already exists - skip');
       return;
     }
