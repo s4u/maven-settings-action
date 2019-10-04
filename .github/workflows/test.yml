@@ -17,7 +17,8 @@ jobs:
       with:
         node-version: '12.x'
     - run: npm version
-    - run: npm install
+    - run: npm ci
+    - run: npm audit
     - run: npm test
 
     - uses: ./
