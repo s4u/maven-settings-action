@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const settings = require('./settings');
 
 
@@ -8,10 +9,11 @@ const settings = require('./settings');
 async function run() {
 
   try {
-    const settingsPath = path.join(process.env.HOME, '.m2', 'settings.xml');
-    core.info('Prepare maven setings: ' +  settingsPath);
+    const settingsPath = path.join(os.homedir(), '.m2', 'settings.xml');
 
-    if ( fs.existsSync(settingsPath) ) {
+    core.info('Prepare maven setings: ' + settingsPath);
+
+    if (fs.existsSync(settingsPath)) {
       core.warning('maven settings.xml already exists - skip');
       return;
     }

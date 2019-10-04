@@ -3,7 +3,7 @@ const cp = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const testHomePath = path.join(__dirname, 'temp');
+const testHomePath = fs.mkdtempSync(".m2");
 const settingsPath = path.join(testHomePath, '.m2', 'settings.xml');
 const indexPath = path.join(__dirname, 'index.js');
 
@@ -13,22 +13,21 @@ beforeAll(() => {
     }
 
     process.env['HOME'] = testHomePath;
+    process.env['USERPROFILE'] = testHomePath;
 });
 
 afterEach(() => {
     try {
         fs.unlinkSync(settingsPath);
     } catch (error) {
-        console.error(error.message);
     }
 });
 
 afterAll(() => {
     try {
-        fs.rmdirSync(path.join(testHomePath, ".m2"));
+        fs.rmdirSync(path.dirname(settingsPath));
         fs.rmdirSync(testHomePath);
     } catch (error) {
-        console.error(error.message);
     }
 });
 
