@@ -2,13 +2,13 @@
 [![Test Action](https://github.com/s4u/maven-settings-action/workflows/Test%20Action/badge.svg)](https://github.com/s4u/maven-settings-action/actions)
 
 This action setup maven environment for use in action by:
- - create maven setings.xml
+ - create maven settings.xml
  - set ```interactiveMode``` to false - useful in CI system
 
  # Usage
 See [action.yml](action.yml)
 
-Crate default ```settings.xml```:
+Create default ```settings.xml```:
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v1
