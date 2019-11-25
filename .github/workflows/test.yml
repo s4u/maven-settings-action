@@ -2,6 +2,8 @@ name: "Test Action"
 on:
   pull_request:
   push:
+  schedule:
+    - cron: '22 22 * * 5'
 
 jobs:
   test:
