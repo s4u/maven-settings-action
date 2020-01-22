@@ -21,14 +21,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-const process = require('process');
+
 const cp = require('child_process');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
+const process = require('process');
+
+const cleanupPath = path.join(__dirname, 'cleanup.js');
 
 const testHomePath = fs.mkdtempSync(".m2");
 const settingsPath = path.join(testHomePath, '.m2', 'settings.xml');
-const indexPath = path.join(__dirname, 'index.js');
 
 beforeAll(() => {
     if (!fs.existsSync(testHomePath)) {
@@ -37,13 +39,6 @@ beforeAll(() => {
 
     process.env['HOME'] = testHomePath;
     process.env['USERPROFILE'] = testHomePath;
-});
-
-afterEach(() => {
-    try {
-        fs.unlinkSync(settingsPath);
-    } catch (error) {
-    }
 });
 
 afterAll(() => {
@@ -60,35 +55,7 @@ afterAll(() => {
 });
 
 
-function assertSetingsFile() {
-    const settingsStatus = fs.lstatSync(settingsPath);
-    expect(settingsStatus.isFile()).toBeTruthy();
-    expect(settingsStatus.size).toBeGreaterThan(0);
-
-    const settingsBody = fs.readFileSync(settingsPath).toString();
-    expect(settingsBody).toMatch('<settings>');
-}
-
 test('run with default values', () => {
-
-    const out = cp.execSync(`node ${indexPath}`, { env: process.env }).toString();
+    const out = cp.execSync(`node ${cleanupPath}`, { env: process.env }).toString();
     console.log(out);
-
-    assertSetingsFile();
-})
-
-test('run with all feature', () => {
-
-    process.env['INPUT_SERVERS'] =  '[{"id": "serverId", "username": "username", "password": "password"}]';
-    process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
-    process.env['INPUT_SONATYPESNAPSHOT'] = true;
-
-    const out = cp.execSync(`node ${indexPath}`, { env: process.env }).toString();
-    console.log(out);
-
-    assertSetingsFile();
-
-    const settingsBody = fs.readFileSync(settingsPath).toString();
-    expect(settingsBody).toMatch('<servers><server><id>serverId</id><username>username</username><password>password</password></server></servers>');
-    expect(settingsBody).toMatch('prop1');
 })

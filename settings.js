@@ -1,9 +1,13 @@
 const core = require('@actions/core');
+const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const DOMParser = require('xmldom').DOMParser;
 const XMLSerializer = require('xmldom').XMLSerializer;
 const xpath = require('xpath');
+
+
+const settingsPath = path.join(os.homedir(), '.m2', 'settings.xml');
 
 function getSettingsTemplate() {
     const templatePath = path.join(__dirname, 'templates', 'settings.xml');
@@ -82,10 +86,33 @@ function addSonatypeSnapshots(template) {
     }
 }
 
+function generate() {
+    core.info('Prepare maven setings: ' + settingsPath);
+
+    if (fs.existsSync(settingsPath)) {
+      core.warning('maven settings.xml already exists - skip');
+      return;
+    }
+
+    const templateXml = getSettingsTemplate();
+    fillServers(templateXml);
+    fillProperties(templateXml);
+    addSonatypeSnapshots(templateXml);
+    writeSettings(settingsPath, templateXml);
+    core.saveState('maven-settings', 'ok');
+}
+
+function cleanup() {
+    const mavenSettingsState = core.getState('maven-settings');
+    core.info('Cleanup maven setings: ' + settingsPath + " state: " + mavenSettingsState);
+}
+
 module.exports = {
     getSettingsTemplate,
     writeSettings,
     fillServers,
     fillProperties,
-    addSonatypeSnapshots
+    addSonatypeSnapshots,
+    generate,
+    cleanup
 }
