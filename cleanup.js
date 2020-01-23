@@ -21,16 +21,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-const core = require('@actions/core');
-const os = require('os');
-const path = require('path');
 
+const core = require('@actions/core');
 const settings = require('./settings');
 
 async function run() {
-    settings.cleanup();
+    try {
+        settings.cleanup();
+    } catch (error) {
+        core.setFailed(error.message);
+    }
 }
 
 run();
-
-module.exports = { run };

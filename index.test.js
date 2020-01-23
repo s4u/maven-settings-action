@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
 const process = require('process');
 const cp = require('child_process');
 const path = require('path');
@@ -60,35 +61,20 @@ afterAll(() => {
 });
 
 
-function assertSetingsFile() {
-    const settingsStatus = fs.lstatSync(settingsPath);
-    expect(settingsStatus.isFile()).toBeTruthy();
-    expect(settingsStatus.size).toBeGreaterThan(0);
-
-    const settingsBody = fs.readFileSync(settingsPath).toString();
-    expect(settingsBody).toMatch('<settings>');
-}
-
-test('run with default values', () => {
-
-    const out = cp.execSync(`node ${indexPath}`, { env: process.env }).toString();
-    console.log(out);
-
-    assertSetingsFile();
-})
-
 test('run with all feature', () => {
 
     process.env['INPUT_SERVERS'] =  '[{"id": "serverId", "username": "username", "password": "password"}]';
     process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
     process.env['INPUT_SONATYPESNAPSHOT'] = true;
 
-    const out = cp.execSync(`node ${indexPath}`, { env: process.env }).toString();
-    console.log(out);
+    cp.execSync(`node ${indexPath}`, { env: process.env }).toString();
 
-    assertSetingsFile();
+    const settingsStatus = fs.lstatSync(settingsPath);
+    expect(settingsStatus.isFile()).toBeTruthy();
+    expect(settingsStatus.size).toBeGreaterThan(0);
 
     const settingsBody = fs.readFileSync(settingsPath).toString();
+    expect(settingsBody).toMatch('<settings>');
     expect(settingsBody).toMatch('<servers><server><id>serverId</id><username>username</username><password>password</password></server></servers>');
     expect(settingsBody).toMatch('prop1');
 })
