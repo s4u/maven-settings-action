@@ -16,8 +16,13 @@ inputs:
     description: 'add https://oss.sonatype.org/content/repositories/snapshots to repository list - true or false'
     default: "false"
     required: false
+  override:
+    description: 'override existing settings.xml file'
+    default: "false"
+    required: false
 
 
 runs:
   using: 'node12'
   main: 'index.js'
+  post: 'cleanup.js'

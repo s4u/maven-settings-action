@@ -22,16 +22,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-const core = require('@actions/core');
-const settings = require('./settings');
+const cp = require('child_process');
+const fs = require('fs');
+const path = require('path');
+const process = require('process');
 
-async function run() {
+const cleanupPath = path.join(__dirname, 'cleanup.js');
 
-  try {
-      settings.generate();
-  } catch (error) {
-    core.setFailed(error.message);
-  }
-}
+const testHomePath = fs.mkdtempSync(".m2");
+const settingsPath = path.join(testHomePath, '.m2', 'settings.xml');
 
-run();
+beforeAll(() => {
+    if (!fs.existsSync(testHomePath)) {
+        fs.mkdirSync(testHomePath);
+    }
+
+    process.env['HOME'] = testHomePath;
+    process.env['USERPROFILE'] = testHomePath;
+});
+
+afterAll(() => {
+
+    try {
+        fs.rmdirSync(path.dirname(settingsPath));
+    } catch (error) {
+    }
+
+    try {
+        fs.rmdirSync(testHomePath);
+    } catch (error) {
+    }
+});
+
+
+test('run with default values', () => {
+    cp.execSync(`node ${cleanupPath}`, { env: process.env }).toString();
+})
