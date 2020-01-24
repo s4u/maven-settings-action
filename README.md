@@ -4,6 +4,7 @@
 This action setup maven environment for use in action by:
  - create maven settings.xml
  - set ```interactiveMode``` to false - useful in CI system
+ - after job finish generated settings.xml will be removed to prevent cache or left sensitive data on build system
 
  # Usage
 See [action.yml](action.yml)
@@ -37,6 +38,15 @@ steps:
   with:
     sonatypeSnapshots: true
 ```
+
+Override existing existing ```settings.xml```:
+```yml
+steps:
+- uses: s4u/maven-settings-action@v1
+  with:
+    override: true
+```
+
 
 # License
 
