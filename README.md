@@ -12,13 +12,13 @@ See [action.yml](action.yml)
 Create default ```settings.xml```:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v1
+- uses: s4u/maven-settings-action@v1.1
 ```
 
 Create ```settings.xml``` with server section:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v1
+- uses: s4u/maven-settings-action@v1.1
   with:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
@@ -26,7 +26,7 @@ steps:
 Create ```settings.xml``` with maven properties:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v1
+- uses: s4u/maven-settings-action@v1.1
   with:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
@@ -34,7 +34,7 @@ steps:
 Create ```settings.xml``` with https://oss.sonatype.org/content/repositories/snapshots in repository list
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v1
+- uses: s4u/maven-settings-action@v1.1
   with:
     sonatypeSnapshots: true
 ```
@@ -42,7 +42,7 @@ steps:
 Override existing existing ```settings.xml```:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v1
+- uses: s4u/maven-settings-action@v1.1
   with:
     override: true
 ```
