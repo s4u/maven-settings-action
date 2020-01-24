@@ -287,7 +287,7 @@ test('genereate', () => {
 
     expect(consoleOutput).toEqual(
         expect.arrayContaining([
-            expect.stringMatching(/Prepare maven setings: \..+\/.m2\/settings.xml/),
+            expect.stringMatching(/Prepare maven setings: \..+[\/\\]{1,2}\.m2[\/\\]{1,2}settings.xml/),
             expect.stringMatching(/:save-state name=maven-settings::ok/)
         ])
     );
@@ -301,7 +301,7 @@ test('genereate - skip', () => {
 
     expect(consoleOutput).toEqual(
         expect.arrayContaining([
-            expect.stringMatching(/Prepare maven setings: \..+\/.m2\/settings.xml/),
+            expect.stringMatching(/Prepare maven setings: \..+[\/\\]{1,2}\.m2[\/\\]{1,2}settings.xml/),
             expect.stringMatching(/::warning::maven settings.xml already exists - skip/)
         ])
     );
@@ -316,7 +316,7 @@ test('genereate - override', () => {
 
     expect(consoleOutput).toEqual(
         expect.arrayContaining([
-            expect.stringMatching(/Prepare maven setings: \..+\/.m2\/settings.xml/),
+            expect.stringMatching(/Prepare maven setings: \..+[\/\\]{1,2}\.m2[\/\\]{1,2}settings.xml/),
             expect.stringMatching(/maven settings.xml already exists - override/),
             expect.stringMatching(/:save-state name=maven-settings::ok/)
         ])
