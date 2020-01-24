@@ -39,7 +39,7 @@ steps:
     sonatypeSnapshots: true
 ```
 
-Override existing existing ```settings.xml```:
+Override existing ```settings.xml```:
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v1.1
