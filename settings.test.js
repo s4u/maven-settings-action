@@ -185,33 +185,13 @@ test('fillServers github', () => {
     const xml = new DOMParser().parseFromString("<servers/>");
 
     process.env['INPUT_GITHUBSERVER'] = 'true';
-    process.env['GITHUB_ACTOR'] = 'githubActor';
-    process.env['GITHUB_TOKEN'] = 'githubToken';
 
     settings.fillServerForGithub(xml);
 
     const xmlStr = new XMLSerializer().serializeToString(xml);
 
-    expect(xmlStr).toBe('<servers><server><id>github</id><username>githubActor</username><password>githubToken</password></server></servers>');
+    expect(xmlStr).toBe('<servers><server><id>github</id><username>${env.GITHUB_ACTOR}</username><password>${env.GITHUB_TOKEN}</password></server></servers>');
     expect(consoleOutput).toEqual([]);
-});
-
-test('fillServers github - no GITHUB_* env', () => {
-
-    const xml = new DOMParser().parseFromString("<servers/>");
-
-    process.env['INPUT_GITHUBSERVER'] = 'true';
-
-    settings.fillServerForGithub(xml);
-
-    const xmlStr = new XMLSerializer().serializeToString(xml);
-
-    expect(xmlStr).toBe('<servers/>');
-    expect(consoleOutput).toEqual(
-        expect.arrayContaining([
-            expect.stringMatching(/::warning::GITHUB_ACTOR or GITHUB_TOKEN environment variable are not set, github server will not be added/)
-        ])
-    );
 });
 
 test('addSonatypeSnapshots activate', () => {

@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 const core = require('@actions/core');
 const os = require('os');
-const process = require('process');
 const path = require('path');
 const fs = require('fs');
 const DOMParser = require('xmldom').DOMParser;
@@ -103,12 +102,7 @@ function fillServerForGithub(templateXml) {
         return;
     }
 
-    if (!process.env['GITHUB_ACTOR'] || !process.env['GITHUB_TOKEN'] ) {
-        core.warning('GITHUB_ACTOR or GITHUB_TOKEN environment variable are not set, github server will not be added');
-        return;
-    }
-
-    fillServer(templateXml, 'github', process.env['GITHUB_ACTOR'], process.env['GITHUB_TOKEN']);
+    fillServer(templateXml, 'github', '${env.GITHUB_ACTOR}', '${env.GITHUB_TOKEN}');
 }
 
 function activateProfile(template, profileId) {
