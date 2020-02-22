@@ -20,6 +20,11 @@ inputs:
     description: 'override existing settings.xml file'
     default: "true"
     required: false
+  githubServer:
+    description: 'add to settings.xml servers server-id: github; username=$GITHUB_ACTOR and password=$GITHUB_TOKEN'
+    default: "true"
+    required: false
+
 
 
 runs:

@@ -87,7 +87,7 @@ afterAll(() => {
 afterEach(() => {
 
     for (key in process.env) {
-        if (key.match(/^INPUT_/)) {
+        if (key.match(/^INPUT_/) || key.match(/^GITHUB_/)) {
             delete process.env[key];
         }
     }
@@ -160,6 +160,58 @@ test('fillServers two servers', () => {
         "<server><id>id1</id><username>username1</username><password>password1</password></server>" +
         "<server><id>id2</id><username>username2</username><password>password2</password></server>" +
         "</servers>");
+});
+
+test('fillServers incorrect fields', () => {
+
+    const xml = new DOMParser().parseFromString("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"idx": "id1"}]';
+
+    settings.fillServers(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+
+    expect(xmlStr).toBe('<servers/>');
+    expect(consoleOutput).toEqual(
+        expect.arrayContaining([
+            expect.stringMatching(/::error::servers must contain id, username and password/)
+        ])
+    );
+});
+
+test('fillServers github', () => {
+
+    const xml = new DOMParser().parseFromString("<servers/>");
+
+    process.env['INPUT_GITHUBSERVER'] = 'true';
+    process.env['GITHUB_ACTOR'] = 'githubActor';
+    process.env['GITHUB_TOKEN'] = 'githubToken';
+
+    settings.fillServerForGithub(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+
+    expect(xmlStr).toBe('<servers><server><id>github</id><username>githubActor</username><password>githubToken</password></server></servers>');
+    expect(consoleOutput).toEqual([]);
+});
+
+test('fillServers github - no GITHUB_* env', () => {
+
+    const xml = new DOMParser().parseFromString("<servers/>");
+
+    process.env['INPUT_GITHUBSERVER'] = 'true';
+
+    settings.fillServerForGithub(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+
+    expect(xmlStr).toBe('<servers/>');
+    expect(consoleOutput).toEqual(
+        expect.arrayContaining([
+            expect.stringMatching(/::warning::GITHUB_ACTOR or GITHUB_TOKEN environment variable are not set, github server will not be added/)
+        ])
+    );
 });
 
 test('addSonatypeSnapshots activate', () => {
@@ -279,7 +331,7 @@ test('cleanup - ok', () => {
 
 test('genereate', () => {
 
-    process.env['INPUT_SERVERS'] =  '[{"id": "serverId", "username": "username", "password": "password"}]';
+    process.env['INPUT_SERVERS'] = '[{"id": "serverId", "username": "username", "password": "password"}]';
     process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
     process.env['INPUT_SONATYPESNAPSHOT'] = true;
 

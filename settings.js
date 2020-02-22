@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 const core = require('@actions/core');
 const os = require('os');
+const process = require('process');
 const path = require('path');
 const fs = require('fs');
 const DOMParser = require('xmldom').DOMParser;
@@ -52,6 +53,34 @@ function writeSettings(settingsPath, templateXml) {
     fs.writeFileSync(settingsPath, settingStr);
 }
 
+function createElementWithText(template, tag, text) {
+    const tagXml = template.createElement(tag);
+    tagXml.textContent = text;
+    return tagXml;
+}
+
+function fillServer(template, id, username, password) {
+
+    const serverXml = template.createElement('server');
+
+    if (!id || !username || !password) {
+        core.setFailed('servers must contain id, username and password');
+        return;
+    }
+
+    const idXml = createElementWithText(template, 'id', id);
+    serverXml.appendChild(idXml);
+
+    const usernameXml = createElementWithText(template, 'username', username);
+    serverXml.appendChild(usernameXml);
+
+    const passwordXml = createElementWithText(template, 'password', password);
+    serverXml.appendChild(passwordXml);
+
+    const serversXml = template.getElementsByTagName('servers')[0];
+    serversXml.appendChild(serverXml);
+}
+
 function fillServers(template) {
 
     const servers = core.getInput('servers');
@@ -60,19 +89,26 @@ function fillServers(template) {
         return;
     }
 
-    const serversXml = template.getElementsByTagName('servers')[0];
+    JSON.parse(servers).forEach((server) => fillServer(template, server.id, server.username, server.password));
+}
 
-    JSON.parse(servers).forEach((server) => {
+function isInputTrue(inputName) {
+    const val = core.getInput(inputName);
+    return val && val.toLocaleLowerCase() == 'true';
+}
 
-        const serverXml = template.createElement('server');
-        serversXml.appendChild(serverXml);
+function fillServerForGithub(templateXml) {
 
-        for (const key in server) {
-            const keyXml = template.createElement(key);
-            keyXml.textContent = server[key];
-            serverXml.appendChild(keyXml);
-        }
-    });
+    if (!isInputTrue('githubServer')) {
+        return;
+    }
+
+    if (!process.env['GITHUB_ACTOR'] || !process.env['GITHUB_TOKEN'] ) {
+        core.warning('GITHUB_ACTOR or GITHUB_TOKEN environment variable are not set, github server will not be added');
+        return;
+    }
+
+    fillServer(templateXml, 'github', process.env['GITHUB_ACTOR'], process.env['GITHUB_TOKEN']);
 }
 
 function activateProfile(template, profileId) {
@@ -106,8 +142,7 @@ function fillProperties(template) {
 }
 
 function addSonatypeSnapshots(template) {
-    const val = core.getInput('sonatypeSnapshots');
-    if (val && val.toLocaleLowerCase() == 'true') {
+    if (isInputTrue('sonatypeSnapshots')) {
         activateProfile(template, '_sonatype-snapshots_')
     }
 }
@@ -119,8 +154,7 @@ function generate() {
     core.info('Prepare maven setings: ' + settingsPath);
 
     if (fs.existsSync(settingsPath)) {
-        const val = core.getInput("override");
-        if (val && val.toLocaleLowerCase() == 'true') {
+        if (isInputTrue('override')) {
             core.info('maven settings.xml already exists - override');
         } else {
             core.warning('maven settings.xml already exists - skip');
@@ -130,6 +164,7 @@ function generate() {
 
     const templateXml = getSettingsTemplate();
     fillServers(templateXml);
+    fillServerForGithub(templateXml);
     fillProperties(templateXml);
     addSonatypeSnapshots(templateXml);
     writeSettings(settingsPath, templateXml);
@@ -156,6 +191,7 @@ module.exports = {
     getSettingsTemplate,
     writeSettings,
     fillServers,
+    fillServerForGithub,
     fillProperties,
     addSonatypeSnapshots,
     generate,
