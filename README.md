@@ -7,6 +7,12 @@ This action setup maven environment for use in action by:
  - after job finish generated settings.xml will be removed to prevent cache or left sensitive data on build system
  - add server to servers with id=github, username=$GITHUB_ACTOR and password=$GITHUB_TOKEN
 
+# Contributions
+
+- Contributions are welcome!
+- Give a star - if you want to encourage me to work on a project
+- Don't hesitate create issue
+
  # Usage
 See [action.yml](action.yml)
 
@@ -59,7 +65,3 @@ steps:
 # License
 
 The scripts and documentation in this project are released under the [MIT License](LICENSE)
-
-# Contributions
-
-Contributions are welcome!
