@@ -1,4 +1,5 @@
 # maven-settings-action
+
 [![Test Action](https://github.com/s4u/maven-settings-action/workflows/Test%20Action/badge.svg)](https://github.com/s4u/maven-settings-action/actions)
 
 This action setup maven environment for use in action by:
@@ -7,22 +8,25 @@ This action setup maven environment for use in action by:
  - after job finish generated settings.xml will be removed to prevent cache or left sensitive data on build system
  - add server to servers with id=github, username=$GITHUB_ACTOR and password=$GITHUB_TOKEN
 
-# Contributions
+## Contributions
 
 - Contributions are welcome!
 - Give a star - if you want to encourage me to work on a project
 - Don't hesitate create issue
 
- # Usage
+## Usage
+
 See [action.yml](action.yml)
 
 Create default ```settings.xml```:
+
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.0
 ```
 
 Create ```settings.xml``` with server section:
+
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.0
@@ -30,7 +34,19 @@ steps:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
 
+Create ```settings.xml``` with [Jfrog Artifactory](https://www.jfrog.com/confluence/display/JFROG/Maven+Repository) in repository list
+
+```yml
+steps:
+- uses: s4u/maven-settings-action@v2.0
+  with:
+    servers: '[{"id": "central", "username": "username", "password": "password"}]'
+    servers: '[{"id": "snapshots", "username": "username", "password": "password"}]'
+    artifactory_org: 'myorg'
+```
+
 Create ```settings.xml``` with maven properties:
+
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.0
@@ -38,7 +54,8 @@ steps:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
 
-Create ```settings.xml``` with https://oss.sonatype.org/content/repositories/snapshots in repository list
+Create ```settings.xml``` with [sonatype snapshots](https://oss.sonatype.org/content/repositories/snapshots) in repository list
+
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.0
@@ -47,6 +64,7 @@ steps:
 ```
 
 Do not override existing ```settings.xml```, from version 2.0 file is override by default :
+
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.0
@@ -55,6 +73,7 @@ steps:
 ```
 
 Do not add github to server in ```settings.xml```, by default is added:
+
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.0
@@ -62,6 +81,6 @@ steps:
     githubServer: false
 ```
 
-# License
+## License
 
 The scripts and documentation in this project are released under the [MIT License](LICENSE)

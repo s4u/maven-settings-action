@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js settings.js",
-    "test": "eslint index.js settings.js && jest --coverage"
+    "test": "eslint index.js settings.js && jest --coverage",
+    "build": "ncc build index.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
   "homepage": "https://github.com/s4u/maven-settings-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.3",
+    "@zeit/ncc": "^0.21.1",
     "xmldom": "^0.3.0",
     "xpath": "0.0.27"
   },

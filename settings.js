@@ -141,6 +141,24 @@ function addSonatypeSnapshots(template) {
     }
 }
 
+function setArtifactoryOrg(template) {
+    const profileId = "_artifactory_"
+    const orgname = core.getInput('artifactory_org');
+
+    if (!orgname) {
+        return;
+    }
+
+    const jfrogorgname = xpath
+        .select(`/settings/profiles/profile[id[contains(text(),"${profileId}")]]/properties/jfrogorgname`, template);
+
+    if (jfrogorgname) {
+        jfrogorgname[0].textContent = orgname;
+    }
+
+    activateProfile(template, '_artifactory_')
+}
+
 function generate() {
 
     const settingsPath = getSettingsPath();
@@ -161,6 +179,7 @@ function generate() {
     fillServerForGithub(templateXml);
     fillProperties(templateXml);
     addSonatypeSnapshots(templateXml);
+    setArtifactoryOrg(templateXml);
     writeSettings(settingsPath, templateXml);
     core.saveState('maven-settings', 'ok');
 }
@@ -188,6 +207,7 @@ module.exports = {
     fillServerForGithub,
     fillProperties,
     addSonatypeSnapshots,
+    setArtifactoryOrg,
     generate,
     cleanup
 }

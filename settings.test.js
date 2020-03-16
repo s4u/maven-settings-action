@@ -66,6 +66,15 @@ beforeEach(() => {
                     <activeByDefault>false</activeByDefault>
                 </activation>
             </profile>
+            <profile>
+                <id>_artifactory_</id>
+                <properties>
+                    <jfrogorgname/>
+                </properties>
+                <activation>
+                    <activeByDefault>false</activeByDefault>
+                </activation>
+            </profile>
         </profiles>
     </settings>`);
 
@@ -216,6 +225,85 @@ test('addSonatypeSnapshots activate', () => {
                     <activeByDefault>true</activeByDefault>
                 </activation>
             </profile>
+            <profile>
+                <id>_artifactory_</id>
+                <properties>
+                    <jfrogorgname/>
+                </properties>
+                <activation>
+                    <activeByDefault>false</activeByDefault>
+                </activation>
+            </profile>
+        </profiles>
+    </settings>`);
+});
+
+test('addArtifactory activate with empty org', () => {
+
+    process.env['INPUT_ARTIFACTORY_ORG'] = "";
+
+    settings.setArtifactoryOrg(xmlTestProfile);
+
+    const xmlStr = new XMLSerializer().serializeToString(xmlTestProfile);
+    expect(xmlStr).toBe(`<settings>
+        <profiles>
+            <profile>
+                <id>_properties_</id>
+                <activation>
+                    <activeByDefault>false</activeByDefault>
+                </activation>
+                <properties/>
+            </profile>
+            <profile>
+                <id>_sonatype-snapshots_</id>
+                <activation>
+                    <activeByDefault>false</activeByDefault>
+                </activation>
+            </profile>
+            <profile>
+                <id>_artifactory_</id>
+                <properties>
+                    <jfrogorgname/>
+                </properties>
+                <activation>
+                    <activeByDefault>false</activeByDefault>
+                </activation>
+            </profile>
+        </profiles>
+    </settings>`);
+});
+
+test('addArtifactory activate with org', () => {
+
+    process.env['INPUT_ARTIFACTORY_ORG'] = "myorg";
+
+    settings.setArtifactoryOrg(xmlTestProfile);
+
+    const xmlStr = new XMLSerializer().serializeToString(xmlTestProfile);
+    expect(xmlStr).toBe(`<settings>
+        <profiles>
+            <profile>
+                <id>_properties_</id>
+                <activation>
+                    <activeByDefault>false</activeByDefault>
+                </activation>
+                <properties/>
+            </profile>
+            <profile>
+                <id>_sonatype-snapshots_</id>
+                <activation>
+                    <activeByDefault>false</activeByDefault>
+                </activation>
+            </profile>
+            <profile>
+                <id>_artifactory_</id>
+                <properties>
+                    <jfrogorgname>myorg</jfrogorgname>
+                </properties>
+                <activation>
+                    <activeByDefault>true</activeByDefault>
+                </activation>
+            </profile>
         </profiles>
     </settings>`);
 });
@@ -242,6 +330,15 @@ test('fillProperties', () => {
                     <activeByDefault>false</activeByDefault>
                 </activation>
             </profile>
+            <profile>
+                <id>_artifactory_</id>
+                <properties>
+                    <jfrogorgname/>
+                </properties>
+                <activation>
+                    <activeByDefault>false</activeByDefault>
+                </activation>
+            </profile>
         </profiles>
     </settings>`);
 })
@@ -262,6 +359,15 @@ test('fillProperties do nothing if no params', () => {
             </profile>
             <profile>
                 <id>_sonatype-snapshots_</id>
+                <activation>
+                    <activeByDefault>false</activeByDefault>
+                </activation>
+            </profile>
+            <profile>
+                <id>_artifactory_</id>
+                <properties>
+                    <jfrogorgname/>
+                </properties>
                 <activation>
                     <activeByDefault>false</activeByDefault>
                 </activation>

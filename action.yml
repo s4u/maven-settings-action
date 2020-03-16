@@ -7,7 +7,7 @@ branding:
 
 inputs:
   servers:
-    description: 'servers definition in joson array, eg: [{"id": "serverId", "username": "username", "password": "password"}]'
+    description: 'servers definition in json array, eg: [{"id": "serverId", "username": "username", "password": "password"}]'
     required: false
   properties:
     description: 'json array with properties, eg [{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
@@ -15,6 +15,10 @@ inputs:
   sonatypeSnapshots:
     description: 'add https://oss.sonatype.org/content/repositories/snapshots to repository list - true or false'
     default: "false"
+    required: false
+  artifactory_org:
+    description: 'enable jfrog default profiles and set jfrog artifactory org name'
+    default: "myorg"
     required: false
   override:
     description: 'override existing settings.xml file'
@@ -29,5 +33,4 @@ inputs:
 
 runs:
   using: 'node12'
-  main: 'index.js'
-  post: 'cleanup.js'
+  main: 'dist/index.js'
