@@ -19,13 +19,13 @@ See [action.yml](action.yml)
 Create default ```settings.xml```:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.0
+- uses: s4u/maven-settings-action@v2
 ```
 
 Create ```settings.xml``` with server section:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.0
+- uses: s4u/maven-settings-action@v2
   with:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
@@ -33,7 +33,7 @@ steps:
 Create ```settings.xml``` with maven properties:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.0
+- uses: s4u/maven-settings-action@v2
   with:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
@@ -41,7 +41,7 @@ steps:
 Create ```settings.xml``` with https://oss.sonatype.org/content/repositories/snapshots in repository list
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.0
+- uses: s4u/maven-settings-action@v2
   with:
     sonatypeSnapshots: true
 ```
@@ -49,7 +49,7 @@ steps:
 Do not override existing ```settings.xml```, from version 2.0 file is override by default :
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.0
+- uses: s4u/maven-settings-action@v2
   with:
     override: false
 ```
@@ -57,7 +57,7 @@ steps:
 Do not add github to server in ```settings.xml```, by default is added:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.0
+- uses: s4u/maven-settings-action@v2
   with:
     githubServer: false
 ```
