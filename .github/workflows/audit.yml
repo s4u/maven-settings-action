@@ -1,11 +1,11 @@
-name: "Test"
+name: "Audit"
 on:
   pull_request:
   push:
     branches-ignore:
       - 'dependabot/*'
   schedule:
-    - cron: '22 22 * * 5'
+    - cron: '09 22 * * *'
 
 jobs:
   test:
@@ -22,19 +22,6 @@ jobs:
       with:
         node-version: '12.x'
 
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '1.8'
-
     - run: npm version
     - run: npm ci
-    - run: npm test
-
-    - uses: ./
-      with:
-        servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
-        properties: '[{"prop1": "value1"}, {"prop2": "value2"}]'
-        sonatypeSnapshots: true
-
-    - run: cat ~/.m2/settings.xml
-      shell: bash
+    - run: npm audit
