@@ -16,9 +16,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Markdown lint
-      uses: actionshub/markdownlint@v1.0.0
-
     - uses: actions/setup-node@v1
       with:
         node-version: '12.x'
