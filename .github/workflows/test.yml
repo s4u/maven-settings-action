@@ -1,7 +1,9 @@
-name: "Test Action"
+name: "Test"
 on:
   pull_request:
   push:
+    branches-ignore:
+      - 'dependabot/*'
   schedule:
     - cron: '22 22 * * 5'
 
@@ -29,7 +31,6 @@ jobs:
 
     - run: npm version
     - run: npm ci
-    - run: npm audit
     - run: npm test
 
     - uses: ./

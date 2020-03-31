@@ -1,0 +1,27 @@
+name: "Audit"
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - 'dependabot/*'
+  schedule:
+    - cron: '09 22 * * *'
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - run: npm version
+    - run: npm ci
+    - run: npm audit
