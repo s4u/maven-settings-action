@@ -41,7 +41,7 @@
             </pluginRepository>
          </pluginRepositories>
       </profile>
-      <!-- mms ################################################################## -->
+      <!-- artifactory ################################################################## -->
       <profile>
          <id>_artifactory_</id>
          <properties>
