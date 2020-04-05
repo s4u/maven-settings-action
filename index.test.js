@@ -64,8 +64,8 @@ afterAll(() => {
 test('run with all feature', () => {
 
     process.env['INPUT_SERVERS'] =  '[{"id": "serverId", "username": "username", "password": "password"}]';
-    process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
-    process.env['INPUT_SONATYPESNAPSHOT'] = true;
+    process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]';
+    process.env['INPUT_SONATYPESNAPSHOTS'] = true;
 
     cp.execSync(`node ${indexPath}`, { env: process.env }).toString();
 
@@ -76,5 +76,6 @@ test('run with all feature', () => {
     const settingsBody = fs.readFileSync(settingsPath).toString();
     expect(settingsBody).toMatch('<settings>');
     expect(settingsBody).toMatch('<servers><server><id>serverId</id><username>username</username><password>password</password></server></servers>');
+    expect(settingsBody).toMatch('<activeByDefault>true</activeByDefault>');
     expect(settingsBody).toMatch('prop1');
 })

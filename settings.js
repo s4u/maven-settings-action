@@ -91,6 +91,42 @@ function fillServers(template) {
     JSON.parse(servers).forEach((server) => fillServer(template, server.id, server.username, server.password));
 }
 
+function fillMirror(template, id, name, mirrorOf, url) {
+
+    const mirrorXml = template.createElement('mirror');
+
+    if (!id || !name || !mirrorOf || !url) {
+        core.setFailed('mirrors must contain id, name, mirrorOf and url');
+        return;
+    }
+
+    const idXml = createElementWithText(template, 'id', id);
+    mirrorXml.appendChild(idXml);
+
+    const nameXml = createElementWithText(template, 'name', name);
+    mirrorXml.appendChild(nameXml);
+
+    const mirrorOfXml = createElementWithText(template, 'mirrorOf', mirrorOf);
+    mirrorXml.appendChild(mirrorOfXml);
+
+    const urlXml = createElementWithText(template, 'url', url);
+    mirrorXml.appendChild(urlXml);
+
+    const mirrorsXml = template.getElementsByTagName('mirrors')[0];
+    mirrorsXml.appendChild(mirrorXml);
+}
+
+function fillMirrors(template) {
+
+    const mirrors = core.getInput('mirrors');
+
+    if (!mirrors) {
+        return;
+    }
+
+    JSON.parse(mirrors).forEach((mirror) => fillMirror(template, mirror.id, mirror.name, mirror.mirrorOf, mirror.url));
+}
+
 function isInputTrue(inputName) {
     const val = core.getInput(inputName);
     return val && val.toLocaleLowerCase() == 'true';
@@ -175,6 +211,7 @@ function generate() {
     }
 
     const templateXml = getSettingsTemplate();
+    fillMirrors(templateXml);
     fillServers(templateXml);
     fillServerForGithub(templateXml);
     fillProperties(templateXml);
@@ -203,6 +240,7 @@ function cleanup() {
 module.exports = {
     getSettingsTemplate,
     writeSettings,
+    fillMirrors,
     fillServers,
     fillServerForGithub,
     fillProperties,

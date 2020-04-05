@@ -8,6 +8,13 @@ on:
     - cron: '22 22 * * 5'
 
 jobs:
+  lint:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Markdown test
+        uses: actionshub/markdownlint@v1.0.0
   test:
     strategy:
       matrix:
@@ -36,9 +43,12 @@ jobs:
           {"id": "serverId", "username": "username", "password": "password"},
           {"id": "serverId", "username": "username", "password": "password"}
           ]'
+        mirrors: '[
+          {"id": "Id", "name": "name", "matchOf": "*", "url": "url"},
+          {"id": "Id", "name": "name", "matchOf": "*", "url": "url"}
+          ]'
         properties: '[{"prop1": "value1"}, {"prop2": "value2"}]'
         sonatypeSnapshots: true
-        artifactory_org: myorg
         
     - run: cat ~/.m2/settings.xml
       shell: bash
