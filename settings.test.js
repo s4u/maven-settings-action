@@ -99,7 +99,6 @@ afterEach(() => {
 });
 
 test('template should be read', () => {
-
     const template = settings.getSettingsTemplate();
 
     expect(template).toBeDefined();
@@ -132,7 +131,6 @@ test('fillServers do nothing if no params', () => {
 test('fillServers one server', () => {
 
     const xml = new DOMParser().parseFromString("<servers/>");
-
 
     process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username1", "password":"password1"}]';
 
@@ -192,6 +190,65 @@ test('fillServers github', () => {
 
     expect(xmlStr).toBe('<servers><server><id>github</id><username>${env.GITHUB_ACTOR}</username><password>${env.GITHUB_TOKEN}</password></server></servers>');
     expect(consoleOutput).toEqual([]);
+});
+
+test('fillMirrors do nothing if no params', () => {
+
+    const xml = new DOMParser().parseFromString("<mirrors/>");
+
+    settings.fillMirrors(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+
+    expect(xmlStr).toBe("<mirrors/>");
+});
+
+test('fillMirrors one mirror', () => {
+
+    const xml = new DOMParser().parseFromString("<mirrors/>");
+
+    process.env['INPUT_MIRRORS'] = '[{"id": "id1", "name": "name", "mirrorOf":"mirrorOf", "url":"url"}]';
+
+    settings.fillMirrors(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+
+    expect(xmlStr).toBe("<mirrors>" +
+        "<mirror><id>id1</id><name>name</name><mirrorOf>mirrorOf</mirrorOf><url>url</url></mirror>" +
+        "</mirrors>");
+});
+
+test('fillMirrors two mirrors', () => {
+
+    const xml = new DOMParser().parseFromString("<mirrors/>");
+
+    process.env['INPUT_MIRRORS'] = '[{"id": "id1", "name": "name1", "mirrorOf":"mirrorOf1", "url":"url1"},{"id": "id2", "name": "name2", "mirrorOf":"mirrorOf2", "url":"url2"}]';
+
+    settings.fillMirrors(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+
+    expect(xmlStr).toBe("<mirrors>" +
+        "<mirror><id>id1</id><name>name1</name><mirrorOf>mirrorOf1</mirrorOf><url>url1</url></mirror><mirror><id>id2</id><name>name2</name><mirrorOf>mirrorOf2</mirrorOf><url>url2</url></mirror>" +
+        "</mirrors>");
+});
+
+test('fillMirrors incorrect fields', () => {
+
+    const xml = new DOMParser().parseFromString("<mirrors/>");
+
+    process.env['INPUT_MIRRORS'] = '[{"idx": "id1"}]';
+
+    settings.fillMirrors(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+
+    expect(xmlStr).toBe('<mirrors/>');
+    expect(consoleOutput).toEqual(
+        expect.arrayContaining([
+            expect.stringMatching(/::error::mirrors must contain id, name, mirrorOf and url/)
+        ])
+    );
 });
 
 test('addSonatypeSnapshots activate', () => {

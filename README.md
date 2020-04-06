@@ -31,12 +31,20 @@ steps:
 - uses: s4u/maven-settings-action@v2
 ```
 
-Create ```settings.xml``` with server section:
+Create ```settings.xml``` with servers section:
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2
   with:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
+```
+
+Create ```settings.xml``` with mirrors section:
+```yml
+steps:
+- uses: s4u/maven-settings-action@v2
+  with:
+    mirrors: '[{"id": "mirrorId", "name": "mirrorName", "mirrorOf": "mirrorOf", "url": "mirrorUrl"}]'
 ```
 
 Create ```settings.xml``` with maven properties:
