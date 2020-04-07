@@ -44,8 +44,8 @@ jobs:
           {"id": "serverId", "username": "username", "password": "password"}
           ]'
         mirrors: '[
-          {"id": "Id", "name": "name", "matchOf": "*", "url": "url"},
-          {"id": "Id", "name": "name", "matchOf": "*", "url": "url"}
+          {"id": "Id", "name": "name", "mirrorOf": "*", "url": "url"},
+          {"id": "Id", "name": "name", "mirrorOf": "*", "url": "url"}
           ]'
         properties: '[{"prop1": "value1"}, {"prop2": "value2"}]'
         sonatypeSnapshots: true
