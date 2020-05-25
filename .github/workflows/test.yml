@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches-ignore:
-      - 'dependabot/*'
+      - 'dependabot/**'
   schedule:
     - cron: '22 22 * * 5'
 
