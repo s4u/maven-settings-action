@@ -1,0 +1,77 @@
+name: "test-build-release"
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - 'dependabot/*'
+  schedule:
+    - cron: '22 22 * * 5'
+
+jobs:
+  lint:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Markdown test
+        uses: actionshub/markdownlint@v1.0.0
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '14.x'
+
+    - run: npm version
+    - run: npm ci
+    - run: npm test
+
+    - uses: ./
+      with:
+        servers: '[
+          {"id": "serverId", "username": "username", "password": "password"},
+          {"id": "serverId", "username": "username", "password": "password"}
+          ]'
+        mirrors: '[
+          {"id": "Id", "name": "name", "mirrorOf": "*", "url": "url"},
+          {"id": "Id", "name": "name", "mirrorOf": "*", "url": "url"}
+          ]'
+        properties: '[{"prop1": "value1"}, {"prop2": "value2"}]'
+        sonatypeSnapshots: true
+        
+    - run: cat ~/.m2/settings.xml
+      shell: bash
+
+  release:
+    name: Create release
+    needs: tests
+    #if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+
+      - run: npm install
+      - run: npm run build
+
+      - name: add and push
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git add -A -f
+          git commit -m "released new version"
+          git push --force https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY $(node -p -e "require('./package.json').version")
+
+      - name: Bump version and push tag
+        id: dump-version
+        uses: mathieudutour/github-tag-action@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

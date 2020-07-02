@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint index.js settings.js",
     "test": "eslint index.js settings.js && jest --coverage",
-    "build": "ncc build index.js"
+    "build": "ncc build index.js -o dist/action && ncc build cleanup.js -o dist/cleanup"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     "xpath": "0.0.27"
   },
   "devDependencies": {
-    "eslint": "^7.1.0",
-    "jest": "^26.0.1"
+    "eslint": "^7.3.1",
+    "jest": "^26.1.0"
   }
 }

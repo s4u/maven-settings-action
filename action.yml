@@ -28,9 +28,7 @@ inputs:
     default: "true"
     required: false
 
-
-
 runs:
   using: 'node12'
-  main: 'index.js'
-  post: 'cleanup.js'
+  main: 'dist/action/index.js'
+  post: 'dist/clenup/cleanup.js'

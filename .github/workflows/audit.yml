@@ -20,8 +20,8 @@ jobs:
 
     - uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
+        node-version: '14.x'
 
     - run: npm version
     - run: npm ci
-    - run: npm audit
+    - run: npm audit --production
