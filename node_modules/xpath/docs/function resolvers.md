@@ -31,11 +31,11 @@ Example usage:
 ```js
 var evaluator = xpath.parse('squareRoot(10)');
 var aboutPi = evaluator.evaluateNumber({
-	functions: {
-		'squareRoot': function (c, value) {
-			return Math.sqrt(value.numberValue());
-		}
-	}
+    functions: {
+        'squareRoot': function (c, value) {
+            return Math.sqrt(value.numberValue());
+        }
+    }
 });
 ```
 
@@ -49,13 +49,13 @@ Example usage:
 ```js
 var evaluator = xpath.parse('math:squareRoot(10)');
 var aboutPi = evaluator.evaluateNumber({
-	functions: function (name, namespace) {
+    functions: function (name, namespace) {
         if (name === 'squareRoot' && namespace === 'http://sample.org/math/') {
-		    return function (c, value) {
-		    	return Math.sqrt(value.numberValue());
-		    };
+            return function (c, value) {
+                return Math.sqrt(value.numberValue());
+            };
         }
-	},
+    },
     namespaces: {
         math: 'http://sample.org/math/'
     }
@@ -72,14 +72,14 @@ Example usage:
 ```js
 var evaluator = xpath.parse('math:squareRoot(10)');
 var aboutPi = evaluator.evaluateNumber({
-	functions: {
+    functions: {
         getFunction: function (name, namespace) {
             if (name === 'squareRoot' && namespace === 'http://sample.org/math/') {
-		        return function (c, value) {
-		    	    return Math.sqrt(value.numberValue());
-		        };
+                return function (c, value) {
+                    return Math.sqrt(value.numberValue());
+                };
             }
-	    }
+        }
     },
     namespaces: {
         math: 'http://sample.org/math/'
