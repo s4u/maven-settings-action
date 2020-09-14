@@ -29,7 +29,7 @@
     "xpath": "0.0.29"
   },
   "devDependencies": {
-    "eslint": "^7.8.1",
+    "eslint": "^7.9.0",
     "jest": "^26.4.2"
   }
 }
