@@ -63,18 +63,132 @@ afterAll(() => {
 
 test('run with all feature', () => {
 
-    process.env['INPUT_SERVERS'] =  '[{"id": "serverId", "username": "username", "password": "password"}]';
-    process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
-    process.env['INPUT_SONATYPESNAPSHOT'] = true;
+    process.env['INPUT_SERVERS'] =  '[{"id": "serverId", "username": "sUsername", "password": "sPassword"}]';
+    process.env['INPUT_ORACLESERVERS'] =  '[{"id": "oServerId", "username": "oUsername", "password": "oPassword"}]';
+    process.env['INPUT_GITHUBSERVER'] =  true;
 
-    cp.execSync(`node ${indexPath}`, { env: process.env }).toString();
+    process.env['INPUT_MIRRORS'] =  '[{"id": "mirrorId", "name": "mirror Name", "mirrorOf": "mirror Off *", "url": "mirror url"}]';
+    process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
+
+    process.env['INPUT_SONATYPESNAPSHOTS'] = true;
+    process.env['INPUT_ORACLEREPO'] = true;
+
+    cp.execSync(`node ${indexPath}`, { env: process.env, stdio: 'inherit' });
 
     const settingsStatus = fs.lstatSync(settingsPath);
     expect(settingsStatus.isFile()).toBeTruthy();
     expect(settingsStatus.size).toBeGreaterThan(0);
 
     const settingsBody = fs.readFileSync(settingsPath).toString();
-    expect(settingsBody).toMatch('<settings>');
-    expect(settingsBody).toMatch('<servers><server><id>serverId</id><username>username</username><password>password</password></server></servers>');
-    expect(settingsBody).toMatch('prop1');
+    expect(settingsBody).toBe(`<settings>
+    <interactiveMode>false</interactiveMode>
+    <profiles>
+<profile>
+    <id>_properties_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <properties><prop1>value1</prop1><prop2>value2</prop2></properties>
+</profile>
+<profile>
+    <id>_sonatype-snapshots_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+</profile>
+<profile>
+    <id>_maven.oracle.com_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories>
+        <repository>
+            <id>maven.oracle.com</id>
+            <url>https://maven.oracle.com</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven.oracle.com</id>
+            <url>https://maven.oracle.com</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+</profile></profiles>
+    <servers>
+<server>
+    <id>serverId</id>
+    <username>sUsername</username>
+    <password>sPassword</password>
+</server>
+<server>
+    <id>oServerId</id>
+    <username>oUsername</username>
+    <password>oPassword</password>
+    <configuration>
+        <basicAuthScope>
+            <host>ANY</host>
+            <port>ANY</port>
+            <realm>OAM 11g</realm>
+        </basicAuthScope>
+        <httpConfiguration>
+            <all>
+                <params>
+                    <property>
+                        <name>http.protocol.allow-circular-redirects</name>
+                        <value>%b,true</value>
+                    </property>
+                </params>
+            </all>
+        </httpConfiguration>
+    </configuration>
+</server>
+<server>
+    <id>github</id>
+    <username>\${env.GITHUB_ACTOR}</username>
+    <password>\${env.GITHUB_TOKEN}</password>
+</server></servers>
+    <mirrors>
+<mirror>
+    <id>mirrorId</id>
+    <name>mirror Name</name>
+    <mirrorOf>mirror Off *</mirrorOf>
+    <url>mirror url</url>
+</mirror></mirrors>
+</settings>`);
 })

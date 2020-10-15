@@ -99,7 +99,7 @@ afterEach(() => {
 });
 
 test('template should be read', () => {
-    const template = settings.getSettingsTemplate();
+    const template = settings.getTemplate('settings.xml');
 
     expect(template).toBeDefined();
 });
@@ -121,7 +121,7 @@ test('fillServers do nothing if no params', () => {
 
     const xml = new DOMParser().parseFromString("<servers/>");
 
-    settings.fillServers(xml);
+    settings.fillServers(xml, 'servers');
 
     const xmlStr = new XMLSerializer().serializeToString(xml);
 
@@ -134,13 +134,17 @@ test('fillServers one server', () => {
 
     process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username1", "password":"password1"}]';
 
-    settings.fillServers(xml);
+    settings.fillServers(xml, 'servers');
 
     const xmlStr = new XMLSerializer().serializeToString(xml);
 
-    expect(xmlStr).toBe("<servers>" +
-        "<server><id>id1</id><username>username1</username><password>password1</password></server>" +
-        "</servers>");
+    expect(xmlStr).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username1</username>
+    <password>password1</password>
+</server></servers>`);
+
 });
 
 test('fillServers two servers', () => {
@@ -150,23 +154,30 @@ test('fillServers two servers', () => {
     process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username1", "password":"password1"},\
         {"id": "id2", "username": "username2", "password":"password2"}]';
 
-    settings.fillServers(xml);
+    settings.fillServers(xml, 'servers');
 
     const xmlStr = new XMLSerializer().serializeToString(xml);
 
-    expect(xmlStr).toBe("<servers>" +
-        "<server><id>id1</id><username>username1</username><password>password1</password></server>" +
-        "<server><id>id2</id><username>username2</username><password>password2</password></server>" +
-        "</servers>");
+    expect(xmlStr).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username1</username>
+    <password>password1</password>
+</server>
+<server>
+    <id>id2</id>
+    <username>username2</username>
+    <password>password2</password>
+</server></servers>`);
 });
 
-test('fillServers incorrect fields', () => {
+test('fill servers incorrect fields', () => {
 
     const xml = new DOMParser().parseFromString("<servers/>");
 
     process.env['INPUT_SERVERS'] = '[{"idx": "id1"}]';
 
-    settings.fillServers(xml);
+    settings.fillServers(xml, 'servers');
 
     const xmlStr = new XMLSerializer().serializeToString(xml);
 
@@ -176,6 +187,41 @@ test('fillServers incorrect fields', () => {
             expect.stringMatching(/::error::servers must contain id, username and password/)
         ])
     );
+});
+
+test('fill oracleServers', () => {
+
+    const xml = new DOMParser().parseFromString("<servers/>");
+
+    process.env['INPUT_ORACLESERVERS'] = '[{"id": "id1", "username": "username1", "password":"password1"}]';
+
+    settings.fillServers(xml, 'oracleServers');
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+
+    expect(xmlStr).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username1</username>
+    <password>password1</password>
+    <configuration>
+        <basicAuthScope>
+            <host>ANY</host>
+            <port>ANY</port>
+            <realm>OAM 11g</realm>
+        </basicAuthScope>
+        <httpConfiguration>
+            <all>
+                <params>
+                    <property>
+                        <name>http.protocol.allow-circular-redirects</name>
+                        <value>%b,true</value>
+                    </property>
+                </params>
+            </all>
+        </httpConfiguration>
+    </configuration>
+</server></servers>`);
 });
 
 test('fillServers github', () => {
@@ -188,7 +234,12 @@ test('fillServers github', () => {
 
     const xmlStr = new XMLSerializer().serializeToString(xml);
 
-    expect(xmlStr).toBe('<servers><server><id>github</id><username>${env.GITHUB_ACTOR}</username><password>${env.GITHUB_TOKEN}</password></server></servers>');
+    expect(xmlStr).toBe(`<servers>
+<server>
+    <id>github</id>
+    <username>\${env.GITHUB_ACTOR}</username>
+    <password>\${env.GITHUB_TOKEN}</password>
+</server></servers>`);
     expect(consoleOutput).toEqual([]);
 });
 
@@ -201,6 +252,7 @@ test('fillMirrors do nothing if no params', () => {
     const xmlStr = new XMLSerializer().serializeToString(xml);
 
     expect(xmlStr).toBe("<mirrors/>");
+    expect(consoleOutput).toEqual([]);
 });
 
 test('fillMirrors one mirror', () => {
@@ -213,9 +265,14 @@ test('fillMirrors one mirror', () => {
 
     const xmlStr = new XMLSerializer().serializeToString(xml);
 
-    expect(xmlStr).toBe("<mirrors>" +
-        "<mirror><id>id1</id><name>name</name><mirrorOf>mirrorOf</mirrorOf><url>url</url></mirror>" +
-        "</mirrors>");
+    expect(xmlStr).toBe(`<mirrors>
+<mirror>
+    <id>id1</id>
+    <name>name</name>
+    <mirrorOf>mirrorOf</mirrorOf>
+    <url>url</url>
+</mirror></mirrors>`);
+    expect(consoleOutput).toEqual([]);
 });
 
 test('fillMirrors two mirrors', () => {
@@ -228,9 +285,20 @@ test('fillMirrors two mirrors', () => {
 
     const xmlStr = new XMLSerializer().serializeToString(xml);
 
-    expect(xmlStr).toBe("<mirrors>" +
-        "<mirror><id>id1</id><name>name1</name><mirrorOf>mirrorOf1</mirrorOf><url>url1</url></mirror><mirror><id>id2</id><name>name2</name><mirrorOf>mirrorOf2</mirrorOf><url>url2</url></mirror>" +
-        "</mirrors>");
+    expect(xmlStr).toBe(`<mirrors>
+<mirror>
+    <id>id1</id>
+    <name>name1</name>
+    <mirrorOf>mirrorOf1</mirrorOf>
+    <url>url1</url>
+</mirror>
+<mirror>
+    <id>id2</id>
+    <name>name2</name>
+    <mirrorOf>mirrorOf2</mirrorOf>
+    <url>url2</url>
+</mirror></mirrors>`);
+    expect(consoleOutput).toEqual([]);
 });
 
 test('fillMirrors incorrect fields', () => {
@@ -251,56 +319,107 @@ test('fillMirrors incorrect fields', () => {
     );
 });
 
-test('addSonatypeSnapshots activate', () => {
+test('addSonatypeSnapshots', () => {
 
     process.env['INPUT_SONATYPESNAPSHOTS'] = "true";
 
-    settings.addSonatypeSnapshots(xmlTestProfile);
+    const xml = new DOMParser().parseFromString('<profiles/>');
 
-    const xmlStr = new XMLSerializer().serializeToString(xmlTestProfile);
-    expect(xmlStr).toBe(`<settings>
-        <profiles>
-            <profile>
-                <id>_properties_</id>
-                <activation>
-                    <activeByDefault>false</activeByDefault>
-                </activation>
-                <properties/>
-            </profile>
-            <profile>
-                <id>_sonatype-snapshots_</id>
-                <activation>
-                    <activeByDefault>true</activeByDefault>
-                </activation>
-            </profile>
-        </profiles>
-    </settings>`);
+    settings.addSonatypeSnapshots(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<profiles>
+<profile>
+    <id>_sonatype-snapshots_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+</profile></profiles>`);
+});
+
+test('addOracleRepo', () => {
+
+    process.env['INPUT_ORACLEREPO'] = "true";
+
+    const xml = new DOMParser().parseFromString('<profiles/>');
+
+    settings.addOracleRepo(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<profiles>
+<profile>
+    <id>_maven.oracle.com_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories>
+        <repository>
+            <id>maven.oracle.com</id>
+            <url>https://maven.oracle.com</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven.oracle.com</id>
+            <url>https://maven.oracle.com</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+</profile></profiles>`);
 });
 
 test('fillProperties', () => {
 
     process.env['INPUT_PROPERTIES'] = '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]';
 
-    settings.fillProperties(xmlTestProfile);
+    const xml = new DOMParser().parseFromString('<profiles/>');
 
-    const xmlStr = new XMLSerializer().serializeToString(xmlTestProfile);
-    expect(xmlStr).toBe(`<settings>
-        <profiles>
-            <profile>
-                <id>_properties_</id>
-                <activation>
-                    <activeByDefault>true</activeByDefault>
-                </activation>
-                <properties><propertyName1>propertyValue1</propertyName1><propertyName2>propertyValue2</propertyName2></properties>
-            </profile>
-            <profile>
-                <id>_sonatype-snapshots_</id>
-                <activation>
-                    <activeByDefault>false</activeByDefault>
-                </activation>
-            </profile>
-        </profiles>
-    </settings>`);
+    settings.fillProperties(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<profiles>
+<profile>
+    <id>_properties_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <properties><propertyName1>propertyValue1</propertyName1><propertyName2>propertyValue2</propertyName2></properties>
+</profile></profiles>`);
 })
 
 test('fillProperties do nothing if no params', () => {

@@ -1,0 +1,8 @@
+
+<profile>
+    <id>_properties_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <properties />
+</profile>

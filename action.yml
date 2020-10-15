@@ -27,8 +27,13 @@ inputs:
     description: 'add to settings.xml servers server-id: github; username=$GITHUB_ACTOR and password=$GITHUB_TOKEN'
     default: "true"
     required: false
-
-
+  oracleServers:
+    description: 'servers definition in joson array, eg: [{"id": "serverId", "username": "username", "password": "password"}] for Oracle repository'
+    required: false
+  oracleRepo:
+    description: 'add Oracle Maven Repository'
+    default: "false"
+    required: false
 
 runs:
   using: 'node12'
