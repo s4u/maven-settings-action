@@ -70,6 +70,7 @@ test('run with all feature', () => {
     process.env['INPUT_MIRRORS'] =  '[{"id": "mirrorId", "name": "mirror Name", "mirrorOf": "mirror Off *", "url": "mirror url"}]';
     process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
 
+    process.env['INPUT_APACHESNAPSHOTS'] = true;
     process.env['INPUT_SONATYPESNAPSHOTS'] = true;
     process.env['INPUT_ORACLEREPO'] = true;
 
@@ -89,6 +90,36 @@ test('run with all feature', () => {
         <activeByDefault>true</activeByDefault>
     </activation>
     <properties><prop1>value1</prop1><prop2>value2</prop2></properties>
+</profile>
+<profile>
+    <id>_apache-snapshots_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories>
+        <repository>
+            <id>apache.snapshots.https</id>
+            <url>https://repository.apache.org/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots.https</id>
+            <url>https://repository.apache.org/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </profile>
 <profile>
     <id>_sonatype-snapshots_</id>
