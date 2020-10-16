@@ -63,6 +63,14 @@ steps:
     sonatypeSnapshots: true
 ```
 
+Create ```settings.xml``` with https://repository.apache.org/snapshots/ in repository list
+```yml
+steps:
+- uses: s4u/maven-settings-action@v2.1.1
+  with:
+    apacheSnapshots: true
+```
+
 Do not override existing ```settings.xml```, from version 2.0 file is override by default :
 ```yml
 steps:

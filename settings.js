@@ -149,6 +149,12 @@ function addProfile(template, profileName) {
     profilesXml.appendChild(sonatypeXml);
 }
 
+function addApacheSnapshots(template) {
+    if (isInputTrue('apacheSnapshots')) {
+        addProfile(template, 'apache-snapshot.xml')
+    }
+}
+
 function addSonatypeSnapshots(template) {
     if (isInputTrue('sonatypeSnapshots')) {
         addProfile(template, 'sonatype-snapshot.xml')
@@ -182,6 +188,7 @@ function generate() {
     fillServers(settingsXml, 'oracleServers');
     fillServerForGithub(settingsXml);
     fillProperties(settingsXml);
+    addApacheSnapshots(settingsXml);
     addSonatypeSnapshots(settingsXml);
     addOracleRepo(settingsXml);
     writeSettings(settingsPath, settingsXml);
@@ -211,6 +218,7 @@ module.exports = {
     fillServers,
     fillServerForGithub,
     fillProperties,
+    addApacheSnapshots,
     addSonatypeSnapshots,
     addOracleRepo,
     generate,

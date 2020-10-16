@@ -319,6 +319,48 @@ test('fillMirrors incorrect fields', () => {
     );
 });
 
+test('addApacheSnapshots', () => {
+
+    process.env['INPUT_APACHESNAPSHOTS'] = "true";
+
+    const xml = new DOMParser().parseFromString('<profiles/>');
+
+    settings.addApacheSnapshots(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<profiles>
+<profile>
+    <id>_apache-snapshots_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories>
+        <repository>
+            <id>apache.snapshots.https</id>
+            <url>https://repository.apache.org/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots.https</id>
+            <url>https://repository.apache.org/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+</profile></profiles>`);
+});
+
 test('addSonatypeSnapshots', () => {
 
     process.env['INPUT_SONATYPESNAPSHOTS'] = "true";
