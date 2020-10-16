@@ -28,13 +28,13 @@ See [action.yml](action.yml)
 Create default ```settings.xml```:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
 ```
 
 Create ```settings.xml``` with servers section:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
   with:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
@@ -42,7 +42,7 @@ steps:
 Create ```settings.xml``` with mirrors section:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
   with:
     mirrors: '[{"id": "mirrorId", "name": "mirrorName", "mirrorOf": "mirrorOf", "url": "mirrorUrl"}]'
 ```
@@ -50,7 +50,7 @@ steps:
 Create ```settings.xml``` with maven properties:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
   with:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
@@ -58,7 +58,7 @@ steps:
 Create ```settings.xml``` with https://oss.sonatype.org/content/repositories/snapshots in repository list
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
   with:
     sonatypeSnapshots: true
 ```
@@ -66,7 +66,7 @@ steps:
 Create ```settings.xml``` with https://repository.apache.org/snapshots/ in repository list
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
   with:
     apacheSnapshots: true
 ```
@@ -74,7 +74,7 @@ steps:
 Do not override existing ```settings.xml```, from version 2.0 file is override by default :
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
   with:
     override: false
 ```
@@ -82,7 +82,7 @@ steps:
 Do not add github to server in ```settings.xml```, by default is added:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
   with:
     githubServer: false
 ```
@@ -90,7 +90,7 @@ steps:
 Create ```settings.xml``` with special server item configuration for oracle repository [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9015)
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
   with:
     oracleServers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
@@ -98,7 +98,7 @@ steps:
 Create ```settings.xml``` with [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9017)
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.1.1
+- uses: s4u/maven-settings-action@v2.2.0
   with:
     oracleRepo: true
 ```
