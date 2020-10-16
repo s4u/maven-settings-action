@@ -17,9 +17,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2.3.2
+    - uses: actions/checkout@v2.3.3
 
-    - uses: actions/setup-node@v2.1.1
+    - uses: actions/setup-node@v2.1.2
       with:
         node-version: '12.x'
 
@@ -36,7 +36,10 @@ jobs:
         servers:    '[{"id": "serverId", "username": "username", "password": "password"}]'
         properties: '[{"prop1": "value1"}, {"prop2": "value2"}]'
         mirrors:    '[{"id": "mirrorId", "name": "mirrorName", "mirrorOf": "mirrorOf", "url": "mirrorUrl"}]'
+        apacheSnapshots: true
         sonatypeSnapshots: true
+        oracleServers: '[{"id": "oServerId", "username": "oUsername", "password": "oPassword"}]'
+        oracleRepo: true
 
     - run: cat ~/.m2/settings.xml
       shell: bash

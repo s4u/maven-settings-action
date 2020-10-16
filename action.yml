@@ -19,6 +19,10 @@ inputs:
     description: 'add https://oss.sonatype.org/content/repositories/snapshots to repository list - true or false'
     default: "false"
     required: false
+  apacheSnapshots:
+    description: 'add https://repository.apache.org/snapshots to repository list - true or false'
+    default: "false"
+    required: false
   override:
     description: 'override existing settings.xml file'
     default: "true"
@@ -27,8 +31,13 @@ inputs:
     description: 'add to settings.xml servers server-id: github; username=$GITHUB_ACTOR and password=$GITHUB_TOKEN'
     default: "true"
     required: false
-
-
+  oracleServers:
+    description: 'servers definition in joson array, eg: [{"id": "serverId", "username": "username", "password": "password"}] for Oracle repository'
+    required: false
+  oracleRepo:
+    description: 'add Oracle Maven Repository'
+    default: "false"
+    required: false
 
 runs:
   using: 'node12'
