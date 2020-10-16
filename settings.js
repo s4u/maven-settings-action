@@ -28,15 +28,13 @@ const path = require('path');
 const fs = require('fs');
 const DOMParser = require('xmldom').DOMParser;
 const XMLSerializer = require('xmldom').XMLSerializer;
-const xpath = require('xpath');
-
 
 function getSettingsPath() {
     return path.join(os.homedir(), '.m2', 'settings.xml');
 }
 
-function getSettingsTemplate() {
-    const templatePath = path.join(__dirname, 'templates', 'settings.xml');
+function getTemplate(templateName) {
+    const templatePath = path.join(__dirname, 'templates', templateName);
     const templateStr = fs.readFileSync(templatePath).toString();
     return new DOMParser().parseFromString(templateStr, 'text/xml');
 }
@@ -52,65 +50,45 @@ function writeSettings(settingsPath, templateXml) {
     fs.writeFileSync(settingsPath, settingStr);
 }
 
-function createElementWithText(template, tag, text) {
-    const tagXml = template.createElement(tag);
-    tagXml.textContent = text;
-    return tagXml;
-}
-
-function fillServer(template, id, username, password) {
-
-    const serverXml = template.createElement('server');
+function fillServer(templateXml, templateName, id, username, password) {
 
     if (!id || !username || !password) {
-        core.setFailed('servers must contain id, username and password');
+        core.setFailed(templateName + ' must contain id, username and password');
         return;
     }
 
-    const idXml = createElementWithText(template, 'id', id);
-    serverXml.appendChild(idXml);
+    const serverXml = getTemplate(templateName + '.xml')
+    serverXml.getElementsByTagName('id')[0].textContent = id;
+    serverXml.getElementsByTagName('username')[0].textContent = username;
+    serverXml.getElementsByTagName('password')[0].textContent = password;
 
-    const usernameXml = createElementWithText(template, 'username', username);
-    serverXml.appendChild(usernameXml);
-
-    const passwordXml = createElementWithText(template, 'password', password);
-    serverXml.appendChild(passwordXml);
-
-    const serversXml = template.getElementsByTagName('servers')[0];
+    const serversXml = templateXml.getElementsByTagName('servers')[0];
     serversXml.appendChild(serverXml);
 }
 
-function fillServers(template) {
+function fillServers(template, templateName) {
 
-    const servers = core.getInput('servers');
+    const servers = core.getInput(templateName);
 
     if (!servers) {
         return;
     }
 
-    JSON.parse(servers).forEach((server) => fillServer(template, server.id, server.username, server.password));
+    JSON.parse(servers).forEach((server) => fillServer(template, templateName, server.id, server.username, server.password));
 }
 
 function fillMirror(template, id, name, mirrorOf, url) {
-
-    const mirrorXml = template.createElement('mirror');
 
     if (!id || !name || !mirrorOf || !url) {
         core.setFailed('mirrors must contain id, name, mirrorOf and url');
         return;
     }
 
-    const idXml = createElementWithText(template, 'id', id);
-    mirrorXml.appendChild(idXml);
-
-    const nameXml = createElementWithText(template, 'name', name);
-    mirrorXml.appendChild(nameXml);
-
-    const mirrorOfXml = createElementWithText(template, 'mirrorOf', mirrorOf);
-    mirrorXml.appendChild(mirrorOfXml);
-
-    const urlXml = createElementWithText(template, 'url', url);
-    mirrorXml.appendChild(urlXml);
+    const mirrorXml = getTemplate('mirrors.xml');
+    mirrorXml.getElementsByTagName('id')[0].textContent = id;
+    mirrorXml.getElementsByTagName('name')[0].textContent = name;
+    mirrorXml.getElementsByTagName('mirrorOf')[0].textContent = mirrorOf;
+    mirrorXml.getElementsByTagName('url')[0].textContent = url;
 
     const mirrorsXml = template.getElementsByTagName('mirrors')[0];
     mirrorsXml.appendChild(mirrorXml);
@@ -138,42 +116,48 @@ function fillServerForGithub(templateXml) {
         return;
     }
 
-    fillServer(templateXml, 'github', '${env.GITHUB_ACTOR}', '${env.GITHUB_TOKEN}');
-}
-
-function activateProfile(template, profileId) {
-    const activeByDefault = xpath
-        .select(`/settings/profiles/profile[id[contains(text(),"${profileId}")]]/activation/activeByDefault`, template);
-
-    if (activeByDefault) {
-        activeByDefault[0].textContent = 'true';
-    }
+    fillServer(templateXml, 'servers', 'github', '${env.GITHUB_ACTOR}', '${env.GITHUB_TOKEN}');
 }
 
 function fillProperties(template) {
 
     const properties = core.getInput('properties');
+
     if (!properties) {
         return;
     }
 
-    activateProfile(template, '_properties_')
-    const propertiesXml = xpath
-        .select(`/settings/profiles/profile[id[contains(text(),"_properties_")]]/properties`, template)[0];
+    const propertiesProfileXml = getTemplate('properties.xml');
+    const propertiesXml = propertiesProfileXml.getElementsByTagName('properties')[0];
 
     JSON.parse(properties).forEach((property) => {
-
         for (const key in property) {
             const keyXml = template.createElement(key);
             keyXml.textContent = property[key];
             propertiesXml.appendChild(keyXml);
         }
     });
+
+    const profilesXml = template.getElementsByTagName('profiles')[0];
+    profilesXml.appendChild(propertiesProfileXml);
+
+}
+
+function addProfile(template, profileName) {
+    const sonatypeXml = getTemplate(profileName);
+    const profilesXml = template.getElementsByTagName('profiles')[0];
+    profilesXml.appendChild(sonatypeXml);
 }
 
 function addSonatypeSnapshots(template) {
     if (isInputTrue('sonatypeSnapshots')) {
-        activateProfile(template, '_sonatype-snapshots_')
+        addProfile(template, 'sonatype-snapshot.xml')
+    }
+}
+
+function addOracleRepo(template) {
+    if (isInputTrue('oracleRepo')) {
+        addProfile(template, 'oracle-repo.xml')
     }
 }
 
@@ -192,13 +176,15 @@ function generate() {
         }
     }
 
-    const templateXml = getSettingsTemplate();
-    fillMirrors(templateXml);
-    fillServers(templateXml);
-    fillServerForGithub(templateXml);
-    fillProperties(templateXml);
-    addSonatypeSnapshots(templateXml);
-    writeSettings(settingsPath, templateXml);
+    const settingsXml = getTemplate('settings.xml');
+    fillMirrors(settingsXml);
+    fillServers(settingsXml, 'servers');
+    fillServers(settingsXml, 'oracleServers');
+    fillServerForGithub(settingsXml);
+    fillProperties(settingsXml);
+    addSonatypeSnapshots(settingsXml);
+    addOracleRepo(settingsXml);
+    writeSettings(settingsPath, settingsXml);
     core.saveState('maven-settings', 'ok');
 }
 
@@ -219,13 +205,14 @@ function cleanup() {
 }
 
 module.exports = {
-    getSettingsTemplate,
+    getTemplate,
     writeSettings,
     fillMirrors,
     fillServers,
     fillServerForGithub,
     fillProperties,
     addSonatypeSnapshots,
+    addOracleRepo,
     generate,
     cleanup
 }

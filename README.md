@@ -79,6 +79,22 @@ steps:
     githubServer: false
 ```
 
+Create ```settings.xml``` with special server item configuration for oracle repository [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9015)
+```yml
+steps:
+- uses: s4u/maven-settings-action@v2.1.1
+  with:
+    oracleServers: '[{"id": "serverId", "username": "username", "password": "password"}]'
+```
+
+Create ```settings.xml``` with [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9017)
+```yml
+steps:
+- uses: s4u/maven-settings-action@v2.1.1
+  with:
+    oracleRepo: true
+```
+
 # License
 
 The scripts and documentation in this project are released under the [MIT License](LICENSE)
