@@ -55,6 +55,22 @@ steps:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
 
+It is also possible pass in Github Secrets e.g.
+
+``` yml
+      with:
+        servers: |
+            [{
+                "id": "sonatype-nexus-snapshots",
+                "username": "${{ secrets.SONATYPE_USERNAME }}",
+                "password": "${{ secrets.SONATYPE_PASSWORD }}"
+            }]
+
+```
+
+**Note**: secrets are *not* passed in if the workflow is triggered from a forked repository. See [here](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#using-encrypted-secrets-in-a-workflow) for further information. This can be avoided by using `if` triggers on the job e.g. `if: github.event_name == 'push'`.
+
+
 Create ```settings.xml``` with https://oss.sonatype.org/content/repositories/snapshots in repository list
 ```yml
 steps:
