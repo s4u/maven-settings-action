@@ -35,3 +35,6 @@ replacers:
 
   - search: '/(?:and )?@dependabot(?:\[bot\])?,?/g'
     replace: ''
+
+  - search: '/(?:and )?Github Action(?:\[bot\])?,?/g'
+    replace: ''
