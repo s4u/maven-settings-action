@@ -28,3 +28,10 @@ template: |
 
   # Thanks
   Many thanks for collaboration on this release for: $CONTRIBUTORS
+
+replacers:
+  - search: '/(?:and )?@dependabot-preview(?:\[bot\])?,?/g'
+    replace: ''
+
+  - search: '/(?:and )?@dependabot(?:\[bot\])?,?/g'
+    replace: ''
