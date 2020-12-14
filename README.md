@@ -119,6 +119,8 @@ steps:
     oracleRepo: true
 ```
 
+**Note**: When using maven-settings-action in combination with Cache action (actions/cache) it is required to place the cache action **before** maven-settings-action. 
+
 # License
 
 The scripts and documentation in this project are released under the [MIT License](LICENSE)
