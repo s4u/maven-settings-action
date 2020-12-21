@@ -63,7 +63,7 @@ afterAll(() => {
 
 test('run with all feature', () => {
 
-    process.env['INPUT_SERVERS'] =  '[{"id": "serverId", "username": "sUsername", "password": "sPassword"}]';
+    process.env['INPUT_SERVERS'] =  '[{"id": "serverId", "username": "sUsername", "password": "sPassword", "configuration": {"props1": "value1"}}]';
     process.env['INPUT_ORACLESERVERS'] =  '[{"id": "oServerId", "username": "oUsername", "password": "oPassword"}]';
     process.env['INPUT_GITHUBSERVER'] =  true;
 
@@ -80,7 +80,7 @@ test('run with all feature', () => {
     expect(settingsStatus.isFile()).toBeTruthy();
     expect(settingsStatus.size).toBeGreaterThan(0);
 
-    const settingsBody = fs.readFileSync(settingsPath).toString();
+    const settingsBody = fs.readFileSync(settingsPath).toString().replace(/^    $/mg, '');
     expect(settingsBody).toBe(`<settings>
     <interactiveMode>false</interactiveMode>
     <profiles>
@@ -186,6 +186,7 @@ test('run with all feature', () => {
     <id>serverId</id>
     <username>sUsername</username>
     <password>sPassword</password>
+    <configuration><props1>value1</props1></configuration>
 </server>
 <server>
     <id>oServerId</id>
@@ -213,6 +214,7 @@ test('run with all feature', () => {
     <id>github</id>
     <username>\${env.GITHUB_ACTOR}</username>
     <password>\${env.GITHUB_TOKEN}</password>
+
 </server></servers>
     <mirrors>
 <mirror>
