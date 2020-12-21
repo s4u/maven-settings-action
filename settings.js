@@ -50,17 +50,51 @@ function writeSettings(settingsPath, templateXml) {
     fs.writeFileSync(settingsPath, settingStr);
 }
 
-function fillServer(templateXml, templateName, id, username, password) {
+function jsonToXml(templateXml, xmlTag, json) {
+    for (const key in json) {
+        const keyXml = templateXml.createElement(key);
+        const value = json[key];
+        if ( value instanceof Object) {
+            jsonToXml(templateXml, keyXml, value);
+        } else {
+            keyXml.textContent = value;
+        }
+        xmlTag.appendChild(keyXml);
+    }
+}
 
-    if (!id || !username || !password) {
-        core.setFailed(templateName + ' must contain id, username and password');
+function fillServer(templateXml, templateName, id, username, password, configurations) {
+
+    if (!id || ((!username || !password) && !configurations) ) {
+        core.setFailed(templateName + ' must contain id, (username and password) or configuration');
         return;
     }
 
     const serverXml = getTemplate(templateName + '.xml')
     serverXml.getElementsByTagName('id')[0].textContent = id;
-    serverXml.getElementsByTagName('username')[0].textContent = username;
-    serverXml.getElementsByTagName('password')[0].textContent = password;
+
+    const usernameTag = serverXml.getElementsByTagName('username')[0];
+    if (username) {
+        usernameTag.textContent = username;
+    } else {
+        serverXml.documentElement.removeChild(usernameTag);
+    }
+
+    const passwordTag = serverXml.getElementsByTagName('password')[0];
+    if (password) {
+        passwordTag.textContent = password;
+    } else {
+        serverXml.documentElement.removeChild(passwordTag);
+    }
+
+    const configurationTag = serverXml.getElementsByTagName('configuration')[0];
+    if (configurations) {
+        jsonToXml(templateXml, configurationTag, configurations);
+    } else {
+        if (configurationTag.childNodes.length == 0) {
+            serverXml.documentElement.removeChild(configurationTag);
+        }
+    }
 
     const serversXml = templateXml.getElementsByTagName('servers')[0];
     serversXml.appendChild(serverXml);
@@ -74,7 +108,8 @@ function fillServers(template, templateName) {
         return;
     }
 
-    JSON.parse(servers).forEach((server) => fillServer(template, templateName, server.id, server.username, server.password));
+    JSON.parse(servers).forEach((server) =>
+        fillServer(template, templateName, server.id, server.username, server.password, server.configuration));
 }
 
 function fillMirror(template, id, name, mirrorOf, url) {

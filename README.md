@@ -25,13 +25,14 @@ or use automatic tools like [Dependabot](https://dependabot.com/).
  # Usage
 See [action.yml](action.yml)
 
-Create default ```settings.xml```:
+## default ```settings.xml```
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
 ```
 
-Create ```settings.xml``` with servers section:
+## ```settings.xml``` with servers section
+
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
@@ -39,7 +40,42 @@ steps:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
 
-Create ```settings.xml``` with mirrors section:
+## ```settings.xml``` with servers section and additional configuration
+
+``` yml
+steps:
+- uses: s4u/maven-settings-action@v2.2.0
+  with:
+    servers: |
+      [{
+        "id": "serverId",
+        "configuration": {
+          "item1": "value1",
+          "item2": {
+            "item21": "value21",
+            "item22": "value22"
+          }
+        }
+      }]
+```
+
+result will be:
+
+```xml
+<server>
+    <id>serverId</id>
+    <configuration>
+      <item1>value1</item1>
+      <item2>
+        <item21>value21</item21>
+        <item22>value22</item22>
+      </item1>
+    </configuration>
+</server></servers>
+```
+
+
+## ```settings.xml``` with mirrors section
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
@@ -47,7 +83,7 @@ steps:
     mirrors: '[{"id": "mirrorId", "name": "mirrorName", "mirrorOf": "mirrorOf", "url": "mirrorUrl"}]'
 ```
 
-Create ```settings.xml``` with maven properties:
+## ```settings.xml``` with properties
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
@@ -55,23 +91,8 @@ steps:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
 
-It is also possible pass in Github Secrets e.g.
+## ```settings.xml``` with https://oss.sonatype.org/content/repositories/snapshots in repository list
 
-``` yml
-      with:
-        servers: |
-            [{
-                "id": "sonatype-nexus-snapshots",
-                "username": "${{ secrets.SONATYPE_USERNAME }}",
-                "password": "${{ secrets.SONATYPE_PASSWORD }}"
-            }]
-
-```
-
-**Note**: secrets are *not* passed in if the workflow is triggered from a forked repository. See [here](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#using-encrypted-secrets-in-a-workflow) for further information. This can be avoided by using `if` triggers on the job e.g. `if: github.event_name == 'push'`.
-
-
-Create ```settings.xml``` with https://oss.sonatype.org/content/repositories/snapshots in repository list
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
@@ -79,7 +100,8 @@ steps:
     sonatypeSnapshots: true
 ```
 
-Create ```settings.xml``` with https://repository.apache.org/snapshots/ in repository list
+## ```settings.xml``` with https://repository.apache.org/snapshots/ in repository list
+
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
@@ -87,7 +109,7 @@ steps:
     apacheSnapshots: true
 ```
 
-Do not override existing ```settings.xml```, from version 2.0 file is override by default :
+## Do not override existing ```settings.xml```, from version **2.0** file is override by default :
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
@@ -95,7 +117,7 @@ steps:
     override: false
 ```
 
-Do not add github to server in ```settings.xml```, by default is added:
+## Do not add github to server in ```settings.xml```, by default is added:
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
@@ -103,7 +125,8 @@ steps:
     githubServer: false
 ```
 
-Create ```settings.xml``` with special server item configuration for oracle repository [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9015)
+## ```settings.xml``` with special server item configuration for oracle repository [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9015)
+
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
@@ -111,7 +134,7 @@ steps:
     oracleServers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
 
-Create ```settings.xml``` with [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9017)
+## ```settings.xml``` with [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9017)
 ```yml
 steps:
 - uses: s4u/maven-settings-action@v2.2.0
@@ -119,7 +142,46 @@ steps:
     oracleRepo: true
 ```
 
-**Note**: When using maven-settings-action in combination with Cache action (actions/cache) it is required to place the cache action **before** maven-settings-action. 
+## GitHub actions secrets
+
+It is also possible pass in Github Secrets e.g.
+
+``` yml
+steps:
+- uses: s4u/maven-settings-action@v2.2.0
+  with:
+    servers: |
+      [{
+          "id": "sonatype-nexus-snapshots",
+          "username": "${{ secrets.SONATYPE_USERNAME }}",
+          "password": "${{ secrets.SONATYPE_PASSWORD }}"
+      }]
+```
+
+**Note**: secrets are *not* passed in if the workflow is triggered from a forked repository. See [here](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#using-encrypted-secrets-in-a-workflow) for further information. This can be avoided by using `if` triggers on the job e.g. `if: github.event_name == 'push'`.
+
+# Notes
+
+**maven-settings-action** should be put at the latest position before maven run in order to avoid override ```setting.xml``` by another action
+
+```yml
+  steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: maven-
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - uses: s4u/maven-settings-action@v2.2.0
+
+      - run: mvn verify
+```
 
 # License
 
