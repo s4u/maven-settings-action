@@ -136,15 +136,92 @@ test('fillServers one server', () => {
 
     settings.fillServers(xml, 'servers');
 
-    const xmlStr = new XMLSerializer().serializeToString(xml);
+    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '');
 
     expect(xmlStr).toBe(`<servers>
 <server>
     <id>id1</id>
     <username>username1</username>
     <password>password1</password>
+
 </server></servers>`);
 
+});
+
+test('fillServers with username and configuration', () => {
+
+    const xml = new DOMParser().parseFromString("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username", "configuration": {"prop1": "prop1Value", "prop2": "prop2Value"}}]';
+
+    settings.fillServers(xml, 'servers');
+
+    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '')
+
+    expect(xmlStr).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username</username>
+
+    <configuration><prop1>prop1Value</prop1><prop2>prop2Value</prop2></configuration>
+</server></servers>`);
+});
+
+test('fillServers with username, password and configuration', () => {
+
+    const xml = new DOMParser().parseFromString("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username", "password": "password", "configuration": {"prop1": "prop1Value", "prop2": "prop2Value"}}]';
+
+    settings.fillServers(xml, 'servers');
+
+    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '')
+
+    expect(xmlStr).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username</username>
+    <password>password</password>
+    <configuration><prop1>prop1Value</prop1><prop2>prop2Value</prop2></configuration>
+</server></servers>`);
+});
+
+test('fillServers with configuration', () => {
+
+    const xml = new DOMParser().parseFromString("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "configuration": {"prop1": "prop1Value", "prop2": "prop2Value"}}]';
+
+    settings.fillServers(xml, 'servers');
+
+    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '')
+
+    expect(xmlStr).toBe(`<servers>
+<server>
+    <id>id1</id>
+
+
+    <configuration><prop1>prop1Value</prop1><prop2>prop2Value</prop2></configuration>
+</server></servers>`);
+});
+
+test('fillServers with configuration subLevel', () => {
+
+    const xml = new DOMParser().parseFromString("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "configuration": {"prop1": {"prop11": "value11", "prop12": "value12"}, "prop2": "value2"}}]';
+
+    settings.fillServers(xml, 'servers');
+
+    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '')
+
+    expect(xmlStr).toBe(`<servers>
+<server>
+    <id>id1</id>
+
+
+    <configuration><prop1><prop11>value11</prop11><prop12>value12</prop12></prop1><prop2>value2</prop2></configuration>
+</server></servers>`);
 });
 
 test('fillServers two servers', () => {
@@ -156,18 +233,20 @@ test('fillServers two servers', () => {
 
     settings.fillServers(xml, 'servers');
 
-    const xmlStr = new XMLSerializer().serializeToString(xml);
+    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '');
 
     expect(xmlStr).toBe(`<servers>
 <server>
     <id>id1</id>
     <username>username1</username>
     <password>password1</password>
+
 </server>
 <server>
     <id>id2</id>
     <username>username2</username>
     <password>password2</password>
+
 </server></servers>`);
 });
 
@@ -184,7 +263,7 @@ test('fill servers incorrect fields', () => {
     expect(xmlStr).toBe('<servers/>');
     expect(consoleOutput).toEqual(
         expect.arrayContaining([
-            expect.stringMatching(/::error::servers must contain id, username and password/)
+            expect.stringMatching(/::error::servers must contain id, \(username and password\) or configuration/)
         ])
     );
 });
@@ -232,13 +311,14 @@ test('fillServers github', () => {
 
     settings.fillServerForGithub(xml);
 
-    const xmlStr = new XMLSerializer().serializeToString(xml);
+    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '');
 
     expect(xmlStr).toBe(`<servers>
 <server>
     <id>github</id>
     <username>\${env.GITHUB_ACTOR}</username>
     <password>\${env.GITHUB_TOKEN}</password>
+
 </server></servers>`);
     expect(consoleOutput).toEqual([]);
 });
