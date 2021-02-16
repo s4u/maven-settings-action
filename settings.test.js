@@ -186,6 +186,60 @@ test('fillServers with username, password and configuration', () => {
 </server></servers>`);
 });
 
+test('fillServers with username, privateKey', () => {
+
+    const xml = stringAsXml("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username", "privateKey": "${user.home}/.ssh/id_rsa"}]';
+
+    settings.fillServers(xml, 'servers');
+
+    expect(xmlAsString(xml)).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username</username>
+    <privateKey>\${user.home}/.ssh/id_rsa</privateKey>
+</server></servers>`);
+});
+
+test('fillServers with username, privateKey, and passphrase', () => {
+
+    const xml = stringAsXml("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username", "privateKey": "${user.home}/.ssh/id_rsa", "passphrase": "secret"}]';
+
+    settings.fillServers(xml, 'servers');
+
+    expect(xmlAsString(xml)).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username</username>
+    <privateKey>\${user.home}/.ssh/id_rsa</privateKey>
+    <passphrase>secret</passphrase>
+</server></servers>`);
+});
+
+test('fillServers with all attributes', () => {
+
+    const xml = stringAsXml("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "server001", "username": "my_login", "password": "my_password", "privateKey": "${user.home}/.ssh/id_dsa", "passphrase": "some_passphrase", "filePermissions": "664", "directoryPermissions": "775", "configuration": {"prop1": "prop1Value", "prop2": "prop2Value"} }]';
+
+    settings.fillServers(xml, 'servers');
+
+    expect(xmlAsString(xml)).toBe(`<servers>
+<server>
+    <id>server001</id>
+    <username>my_login</username>
+    <password>my_password</password>
+    <privateKey>\${user.home}/.ssh/id_dsa</privateKey>
+    <passphrase>some_passphrase</passphrase>
+    <filePermissions>664</filePermissions>
+    <directoryPermissions>775</directoryPermissions>
+    <configuration><prop1>prop1Value</prop1><prop2>prop2Value</prop2></configuration>
+</server></servers>`);
+});
+
 test('fillServers with configuration', () => {
 
     const xml = stringAsXml("<servers/>");
