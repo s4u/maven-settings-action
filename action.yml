@@ -1,4 +1,4 @@
-name: 'maven-setings-action'
+name: 'maven-settings-action'
 description: 'Prepare maven settings.xml'
 
 branding:
@@ -7,7 +7,7 @@ branding:
 
 inputs:
   servers:
-    description: 'servers definition in joson array, eg: [{"id": "serverId", "username": "username", "password": "password"}]'
+    description: 'servers definition in json array, eg: [{"id": "serverId", "username": "username", "password": "password"}]'
     required: false
   mirrors:
     description: 'mirrors definition in json array, eg: [{"id": "id", "name": "name", "mirrorOf": "mirrorOf", "url": "url"}]'
@@ -32,7 +32,7 @@ inputs:
     default: "true"
     required: false
   oracleServers:
-    description: 'servers definition in joson array, eg: [{"id": "serverId", "username": "username", "password": "password"}] for Oracle repository'
+    description: 'servers definition in json array, eg: [{"id": "serverId", "username": "username", "password": "password"}] for Oracle repository'
     required: false
   oracleRepo:
     description: 'add Oracle Maven Repository'
