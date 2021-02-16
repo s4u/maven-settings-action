@@ -38,6 +38,14 @@ const settingsPath = path.join(testHomePath, '.m2', 'settings.xml');
 
 var consoleOutput = [];
 
+function stringAsXml(str) {
+    return new DOMParser().parseFromString(str, 'text/xml');
+}
+
+function xmlAsString(xml) {
+    return new XMLSerializer().serializeToString(xml).replace(/^\s*$(?:\r\n?|\n)/gm, '');
+}
+
 beforeAll(() => {
     if (!fs.existsSync(testHomePath)) {
         fs.mkdirSync(testHomePath);
@@ -51,7 +59,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-    xmlTestProfile = new DOMParser().parseFromString(`<settings>
+    xmlTestProfile = stringAsXml(`<settings>
         <profiles>
             <profile>
                 <id>_properties_</id>
@@ -119,7 +127,7 @@ test('xml should be write', () => {
 
 test('fillServers do nothing if no params', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     settings.fillServers(xml, 'servers');
 
@@ -130,54 +138,46 @@ test('fillServers do nothing if no params', () => {
 
 test('fillServers one server', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username1", "password":"password1"}]';
 
     settings.fillServers(xml, 'servers');
 
-    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '');
-
-    expect(xmlStr).toBe(`<servers>
+    expect(xmlAsString(xml)).toBe(`<servers>
 <server>
     <id>id1</id>
     <username>username1</username>
     <password>password1</password>
-
 </server></servers>`);
 
 });
 
 test('fillServers with username and configuration', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username", "configuration": {"prop1": "prop1Value", "prop2": "prop2Value"}}]';
 
     settings.fillServers(xml, 'servers');
 
-    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '')
-
-    expect(xmlStr).toBe(`<servers>
+    expect(xmlAsString(xml)).toBe(`<servers>
 <server>
     <id>id1</id>
     <username>username</username>
-
     <configuration><prop1>prop1Value</prop1><prop2>prop2Value</prop2></configuration>
 </server></servers>`);
 });
 
 test('fillServers with username, password and configuration', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username", "password": "password", "configuration": {"prop1": "prop1Value", "prop2": "prop2Value"}}]';
 
     settings.fillServers(xml, 'servers');
 
-    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '')
-
-    expect(xmlStr).toBe(`<servers>
+    expect(xmlAsString(xml)).toBe(`<servers>
 <server>
     <id>id1</id>
     <username>username</username>
@@ -188,71 +188,59 @@ test('fillServers with username, password and configuration', () => {
 
 test('fillServers with configuration', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     process.env['INPUT_SERVERS'] = '[{"id": "id1", "configuration": {"prop1": "prop1Value", "prop2": "prop2Value"}}]';
 
     settings.fillServers(xml, 'servers');
 
-    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '')
-
-    expect(xmlStr).toBe(`<servers>
+    expect(xmlAsString(xml)).toBe(`<servers>
 <server>
     <id>id1</id>
-
-
     <configuration><prop1>prop1Value</prop1><prop2>prop2Value</prop2></configuration>
 </server></servers>`);
 });
 
 test('fillServers with configuration subLevel', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     process.env['INPUT_SERVERS'] = '[{"id": "id1", "configuration": {"prop1": {"prop11": "value11", "prop12": "value12"}, "prop2": "value2"}}]';
 
     settings.fillServers(xml, 'servers');
 
-    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '')
-
-    expect(xmlStr).toBe(`<servers>
+    expect(xmlAsString(xml)).toBe(`<servers>
 <server>
     <id>id1</id>
-
-
     <configuration><prop1><prop11>value11</prop11><prop12>value12</prop12></prop1><prop2>value2</prop2></configuration>
 </server></servers>`);
 });
 
 test('fillServers two servers', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username1", "password":"password1"},\
         {"id": "id2", "username": "username2", "password":"password2"}]';
 
     settings.fillServers(xml, 'servers');
 
-    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '');
-
-    expect(xmlStr).toBe(`<servers>
+    expect(xmlAsString(xml)).toBe(`<servers>
 <server>
     <id>id1</id>
     <username>username1</username>
     <password>password1</password>
-
 </server>
 <server>
     <id>id2</id>
     <username>username2</username>
     <password>password2</password>
-
 </server></servers>`);
 });
 
 test('fill servers incorrect fields', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     process.env['INPUT_SERVERS'] = '[{"idx": "id1"}]';
 
@@ -263,22 +251,20 @@ test('fill servers incorrect fields', () => {
     expect(xmlStr).toBe('<servers/>');
     expect(consoleOutput).toEqual(
         expect.arrayContaining([
-            expect.stringMatching(/::error::servers must contain id, \(username and password\) or configuration/)
+            expect.stringMatching(/::error::servers must contain id, and username or configuration/)
         ])
     );
 });
 
 test('fill oracleServers', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     process.env['INPUT_ORACLESERVERS'] = '[{"id": "id1", "username": "username1", "password":"password1"}]';
 
     settings.fillServers(xml, 'oracleServers');
 
-    const xmlStr = new XMLSerializer().serializeToString(xml);
-
-    expect(xmlStr).toBe(`<servers>
+    expect(xmlAsString(xml)).toBe(`<servers>
 <server>
     <id>id1</id>
     <username>username1</username>
@@ -305,27 +291,24 @@ test('fill oracleServers', () => {
 
 test('fillServers github', () => {
 
-    const xml = new DOMParser().parseFromString("<servers/>");
+    const xml = stringAsXml("<servers/>");
 
     process.env['INPUT_GITHUBSERVER'] = 'true';
 
     settings.fillServerForGithub(xml);
 
-    const xmlStr = new XMLSerializer().serializeToString(xml).replace(/^    $/mg, '');
-
-    expect(xmlStr).toBe(`<servers>
+    expect(xmlAsString(xml)).toBe(`<servers>
 <server>
     <id>github</id>
     <username>\${env.GITHUB_ACTOR}</username>
     <password>\${env.GITHUB_TOKEN}</password>
-
 </server></servers>`);
     expect(consoleOutput).toEqual([]);
 });
 
 test('fillMirrors do nothing if no params', () => {
 
-    const xml = new DOMParser().parseFromString("<mirrors/>");
+    const xml = stringAsXml("<mirrors/>");
 
     settings.fillMirrors(xml);
 
@@ -337,7 +320,7 @@ test('fillMirrors do nothing if no params', () => {
 
 test('fillMirrors one mirror', () => {
 
-    const xml = new DOMParser().parseFromString("<mirrors/>");
+    const xml = stringAsXml("<mirrors/>");
 
     process.env['INPUT_MIRRORS'] = '[{"id": "id1", "name": "name", "mirrorOf":"mirrorOf", "url":"url"}]';
 
@@ -357,7 +340,7 @@ test('fillMirrors one mirror', () => {
 
 test('fillMirrors two mirrors', () => {
 
-    const xml = new DOMParser().parseFromString("<mirrors/>");
+    const xml = stringAsXml("<mirrors/>");
 
     process.env['INPUT_MIRRORS'] = '[{"id": "id1", "name": "name1", "mirrorOf":"mirrorOf1", "url":"url1"},{"id": "id2", "name": "name2", "mirrorOf":"mirrorOf2", "url":"url2"}]';
 
@@ -383,7 +366,7 @@ test('fillMirrors two mirrors', () => {
 
 test('fillMirrors incorrect fields', () => {
 
-    const xml = new DOMParser().parseFromString("<mirrors/>");
+    const xml = stringAsXml("<mirrors/>");
 
     process.env['INPUT_MIRRORS'] = '[{"idx": "id1"}]';
 
@@ -403,7 +386,7 @@ test('addApacheSnapshots', () => {
 
     process.env['INPUT_APACHESNAPSHOTS'] = "true";
 
-    const xml = new DOMParser().parseFromString('<profiles/>');
+    const xml = stringAsXml('<profiles/>');
 
     settings.addApacheSnapshots(xml);
 
@@ -445,7 +428,7 @@ test('addSonatypeSnapshots', () => {
 
     process.env['INPUT_SONATYPESNAPSHOTS'] = "true";
 
-    const xml = new DOMParser().parseFromString('<profiles/>');
+    const xml = stringAsXml('<profiles/>');
 
     settings.addSonatypeSnapshots(xml);
 
@@ -487,7 +470,7 @@ test('addOracleRepo', () => {
 
     process.env['INPUT_ORACLEREPO'] = "true";
 
-    const xml = new DOMParser().parseFromString('<profiles/>');
+    const xml = stringAsXml('<profiles/>');
 
     settings.addOracleRepo(xml);
 
@@ -529,7 +512,7 @@ test('fillProperties', () => {
 
     process.env['INPUT_PROPERTIES'] = '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]';
 
-    const xml = new DOMParser().parseFromString('<profiles/>');
+    const xml = stringAsXml('<profiles/>');
 
     settings.fillProperties(xml);
 
