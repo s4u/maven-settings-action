@@ -40,6 +40,18 @@ steps:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
 
+All `server` attributes may be specified:
+  * `id` _(required)_
+  * `username`
+  * `password`
+  * `privateKey`
+  * `passphrase`
+  * `filePermissions`
+  * `directoryPermissions`
+  * `configuration`
+
+Please refer to the [servers](http://maven.apache.org/settings.html#Servers) documentation for more information.
+
 ## ```settings.xml``` with servers section and additional configuration
 
 ``` yml

@@ -63,11 +63,11 @@ afterAll(() => {
 
 test('run with all feature', () => {
 
-    process.env['INPUT_SERVERS'] =  '[{"id": "serverId", "username": "sUsername", "password": "sPassword", "configuration": {"props1": "value1"}}]';
-    process.env['INPUT_ORACLESERVERS'] =  '[{"id": "oServerId", "username": "oUsername", "password": "oPassword"}]';
-    process.env['INPUT_GITHUBSERVER'] =  true;
+    process.env['INPUT_SERVERS'] = '[{"id": "serverId", "username": "sUsername", "password": "sPassword", "configuration": {"props1": "value1"}}]';
+    process.env['INPUT_ORACLESERVERS'] = '[{"id": "oServerId", "username": "oUsername", "password": "oPassword"}]';
+    process.env['INPUT_GITHUBSERVER'] = true;
 
-    process.env['INPUT_MIRRORS'] =  '[{"id": "mirrorId", "name": "mirror Name", "mirrorOf": "mirror Off *", "url": "mirror url"}]';
+    process.env['INPUT_MIRRORS'] = '[{"id": "mirrorId", "name": "mirror Name", "mirrorOf": "mirror Off *", "url": "mirror url"}]';
     process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
 
     process.env['INPUT_APACHESNAPSHOTS'] = true;
@@ -80,7 +80,7 @@ test('run with all feature', () => {
     expect(settingsStatus.isFile()).toBeTruthy();
     expect(settingsStatus.size).toBeGreaterThan(0);
 
-    const settingsBody = fs.readFileSync(settingsPath).toString().replace(/^    $/mg, '');
+    const settingsBody = fs.readFileSync(settingsPath).toString().replace(/^\s*$(?:\r\n?|\n)/gm, '');
     expect(settingsBody).toBe(`<settings>
     <interactiveMode>false</interactiveMode>
     <profiles>
@@ -214,7 +214,6 @@ test('run with all feature', () => {
     <id>github</id>
     <username>\${env.GITHUB_ACTOR}</username>
     <password>\${env.GITHUB_TOKEN}</password>
-
 </server></servers>
     <mirrors>
 <mirror>

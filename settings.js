@@ -54,7 +54,7 @@ function jsonToXml(templateXml, xmlTag, json) {
     for (const key in json) {
         const keyXml = templateXml.createElement(key);
         const value = json[key];
-        if ( value instanceof Object) {
+        if (value instanceof Object) {
             jsonToXml(templateXml, keyXml, value);
         } else {
             keyXml.textContent = value;
@@ -63,28 +63,32 @@ function jsonToXml(templateXml, xmlTag, json) {
     }
 }
 
-function fillServer(templateXml, templateName, id, username, password, configurations) {
+function fillServer(templateXml, templateName, id, username, password, privateKey, passphrase, filePermissions, directoryPermissions, configurations) {
 
-    if (!id || ((!username || !password) && !configurations) ) {
-        core.setFailed(templateName + ' must contain id, (username and password) or configuration');
+    if (!id || (!username && !configurations)) {
+        core.setFailed(templateName + ' must contain id, and username or configuration');
         return;
     }
 
     const serverXml = getTemplate(templateName + '.xml')
     serverXml.getElementsByTagName('id')[0].textContent = id;
 
-    const usernameTag = serverXml.getElementsByTagName('username')[0];
-    if (username) {
-        usernameTag.textContent = username;
-    } else {
-        serverXml.documentElement.removeChild(usernameTag);
-    }
-
-    const passwordTag = serverXml.getElementsByTagName('password')[0];
-    if (password) {
-        passwordTag.textContent = password;
-    } else {
-        serverXml.documentElement.removeChild(passwordTag);
+    const serverTags = {
+        'username': username,
+        'password': password,
+        'privateKey': privateKey,
+        'passphrase': passphrase,
+        'filePermissions': filePermissions,
+        'directoryPermissions': directoryPermissions
+    };
+    for (const tag in serverTags) {
+        const serverTag = serverXml.getElementsByTagName(tag)[0];
+        const tagValue = serverTags[tag];
+        if (tagValue) {
+            serverTag.textContent = tagValue;
+        } else {
+            serverXml.documentElement.removeChild(serverTag);
+        }
     }
 
     const configurationTag = serverXml.getElementsByTagName('configuration')[0];
@@ -109,7 +113,10 @@ function fillServers(template, templateName) {
     }
 
     JSON.parse(servers).forEach((server) =>
-        fillServer(template, templateName, server.id, server.username, server.password, server.configuration));
+        fillServer(template, templateName, server.id, server.username,
+            server.password, server.privateKey, server.passphrase,
+            server.filePermissions, server.directoryPermissions,
+            server.configuration));
 }
 
 function fillMirror(template, id, name, mirrorOf, url) {
