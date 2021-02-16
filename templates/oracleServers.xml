@@ -3,6 +3,10 @@
     <id />
     <username />
     <password />
+    <privateKey />
+    <passphrase />
+    <filePermissions />
+    <directoryPermissions />
     <configuration>
         <basicAuthScope>
             <host>ANY</host>
