@@ -28,23 +28,35 @@ See [action.yml](action.yml)
 ## default ```settings.xml```
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
 ```
 
 ## ```settings.xml``` with servers section
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
+
+All `server` attributes may be specified:
+  * `id` _(required)_
+  * `username`
+  * `password`
+  * `privateKey`
+  * `passphrase`
+  * `filePermissions`
+  * `directoryPermissions`
+  * `configuration`
+
+Please refer to the [servers](http://maven.apache.org/settings.html#Servers) documentation for more information.
 
 ## ```settings.xml``` with servers section and additional configuration
 
 ``` yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     servers: |
       [{
@@ -78,7 +90,7 @@ result will be:
 ## ```settings.xml``` with mirrors section
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     mirrors: '[{"id": "mirrorId", "name": "mirrorName", "mirrorOf": "mirrorOf", "url": "mirrorUrl"}]'
 ```
@@ -86,7 +98,7 @@ steps:
 ## ```settings.xml``` with properties
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
@@ -95,7 +107,7 @@ steps:
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     sonatypeSnapshots: true
 ```
@@ -104,7 +116,7 @@ steps:
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     apacheSnapshots: true
 ```
@@ -112,7 +124,7 @@ steps:
 ## Do not override existing ```settings.xml```, from version **2.0** file is override by default :
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     override: false
 ```
@@ -120,7 +132,7 @@ steps:
 ## Do not add github to server in ```settings.xml```, by default is added:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     githubServer: false
 ```
@@ -129,7 +141,7 @@ steps:
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     oracleServers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
@@ -137,7 +149,7 @@ steps:
 ## ```settings.xml``` with [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9017)
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     oracleRepo: true
 ```
@@ -148,7 +160,7 @@ It is also possible pass in Github Secrets e.g.
 
 ``` yml
 steps:
-- uses: s4u/maven-settings-action@v2.3.0
+- uses: s4u/maven-settings-action@v2.4.0
   with:
     servers: |
       [{
@@ -178,7 +190,7 @@ steps:
         with:
           java-version: 8
 
-      - uses: s4u/maven-settings-action@v2.3.0
+      - uses: s4u/maven-settings-action@v2.4.0
 
       - run: mvn verify
 ```
