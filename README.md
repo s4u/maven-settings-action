@@ -3,7 +3,7 @@
 [![Audit](https://github.com/s4u/maven-settings-action/workflows/Audit/badge.svg)](https://github.com/s4u/maven-settings-action/actions?query=workflow%3AAudit)
 
 
-This action setup maven environment for use in action by:
+This action sets up Maven environments for use in GitHub Actions by:
  - create maven settings.xml
  - set ```interactiveMode``` to false - useful in CI system
  - after job finish generated settings.xml will be removed to prevent cache or left sensitive data on build system
@@ -12,10 +12,10 @@ This action setup maven environment for use in action by:
 # Contributions
 - Contributions are welcome!
 - Give :star: - if you want to encourage me to work on a project
-- Don't hesitate create issue for new feature you dream of or if you suspect some bug
+- Don't hesitate to create issues for new features you dream of or if you suspect some bug
 
 # Project versioning
-Project use [Semantic Versioning](https://semver.org/).
+This project uses [Semantic Versioning](https://semver.org/).
 We recommended to use the latest and specific release version.
 
 In order to keep your project dependencies up to date you can watch this repository *(Releases only)*
@@ -197,4 +197,4 @@ steps:
 
 # License
 
-The scripts and documentation in this project are released under the [MIT License](LICENSE)
+The scripts and documentation in this project are released under the [MIT License](LICENSE).
