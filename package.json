@@ -25,7 +25,7 @@
   "homepage": "https://github.com/s4u/maven-settings-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.7",
-    "xmldom": "^0.5.0"
+    "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "eslint": "^7.24.0",
