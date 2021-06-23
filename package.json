@@ -29,6 +29,6 @@
   },
   "devDependencies": {
     "eslint": "^7.28.0",
-    "jest": "^27.0.4"
+    "jest": "^27.0.5"
   }
 }
