@@ -14,7 +14,7 @@ jobs:
           || github.actor == 'dependabot-preview[bot]'
         with:
           merge-method: "REBASE"
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.TECH_TOKEN }}"
 
       - uses: hmarr/auto-approve-action@v2.1.0
         if: >
@@ -22,4 +22,4 @@ jobs:
           || github.actor == 'dependabot-preview[bot]'
           || github.actor == 'slawekjaranowski'
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.TECH_TOKEN }}"
