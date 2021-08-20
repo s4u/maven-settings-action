@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js settings.js",
-    "test": "eslint index.js settings.js && jest --coverage"
+    "test": "eslint index.js settings.js && jest --coverage",
+    "version": "./update-readme.sh",
+    "postversion": "git tag --delete v$npm_new_version"
   },
   "repository": {
     "type": "git",
