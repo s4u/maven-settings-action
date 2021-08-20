@@ -9,11 +9,13 @@ jobs:
   update_release_draft:
     name: Update Release Draft
     runs-on: ubuntu-latest
+    concurrency: release-drafter
+
     if: >
       github.repository_owner == 's4u'
       && !startsWith(github.event.head_commit.message , '[maven-release-plugin]')
 
     steps:
-      - uses: release-drafter/release-drafter@v5.14.0
+      - uses: release-drafter/release-drafter@v5.15.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

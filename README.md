@@ -3,7 +3,7 @@
 [![Audit](https://github.com/s4u/maven-settings-action/workflows/Audit/badge.svg)](https://github.com/s4u/maven-settings-action/actions?query=workflow%3AAudit)
 
 
-This action setup maven environment for use in action by:
+This action sets up Maven environments for use in GitHub Actions by:
  - create maven settings.xml
  - set ```interactiveMode``` to false - useful in CI system
  - after job finish generated settings.xml will be removed to prevent cache or left sensitive data on build system
@@ -12,10 +12,10 @@ This action setup maven environment for use in action by:
 # Contributions
 - Contributions are welcome!
 - Give :star: - if you want to encourage me to work on a project
-- Don't hesitate create issue for new feature you dream of or if you suspect some bug
+- Don't hesitate to create issues for new features you dream of or if you suspect some bug
 
 # Project versioning
-Project use [Semantic Versioning](https://semver.org/).
+This project uses [Semantic Versioning](https://semver.org/).
 We recommended to use the latest and specific release version.
 
 In order to keep your project dependencies up to date you can watch this repository *(Releases only)*
@@ -28,14 +28,14 @@ See [action.yml](action.yml)
 ## default ```settings.xml```
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
 ```
 
 ## ```settings.xml``` with servers section
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
@@ -56,7 +56,7 @@ Please refer to the [servers](http://maven.apache.org/settings.html#Servers) doc
 
 ``` yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     servers: |
       [{
@@ -90,7 +90,7 @@ result will be:
 ## ```settings.xml``` with mirrors section
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     mirrors: '[{"id": "mirrorId", "name": "mirrorName", "mirrorOf": "mirrorOf", "url": "mirrorUrl"}]'
 ```
@@ -98,7 +98,7 @@ steps:
 ## ```settings.xml``` with properties
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
@@ -107,7 +107,7 @@ steps:
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     sonatypeSnapshots: true
 ```
@@ -116,7 +116,7 @@ steps:
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     apacheSnapshots: true
 ```
@@ -124,7 +124,7 @@ steps:
 ## Do not override existing ```settings.xml```, from version **2.0** file is override by default :
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     override: false
 ```
@@ -132,7 +132,7 @@ steps:
 ## Do not add github to server in ```settings.xml```, by default is added:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     githubServer: false
 ```
@@ -141,7 +141,7 @@ steps:
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     oracleServers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
@@ -149,7 +149,7 @@ steps:
 ## ```settings.xml``` with [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9017)
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     oracleRepo: true
 ```
@@ -160,7 +160,7 @@ It is also possible pass in Github Secrets e.g.
 
 ``` yml
 steps:
-- uses: s4u/maven-settings-action@v2.4.0
+- uses: s4u/maven-settings-action@v2.4.1
   with:
     servers: |
       [{
@@ -190,11 +190,11 @@ steps:
         with:
           java-version: 8
 
-      - uses: s4u/maven-settings-action@v2.4.0
+      - uses: s4u/maven-settings-action@v2.4.1
 
       - run: mvn verify
 ```
 
 # License
 
-The scripts and documentation in this project are released under the [MIT License](LICENSE)
+The scripts and documentation in this project are released under the [MIT License](LICENSE).

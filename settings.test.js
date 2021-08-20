@@ -24,8 +24,8 @@ THE SOFTWARE.
 
 const os = require('os');
 const process = require('process');
-const DOMParser = require('xmldom').DOMParser;
-const XMLSerializer = require('xmldom').XMLSerializer;
+const DOMParser = require('@xmldom/xmldom').DOMParser;
+const XMLSerializer = require('@xmldom/xmldom').XMLSerializer;
 const fs = require('fs');
 const path = require('path');
 
