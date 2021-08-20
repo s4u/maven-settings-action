@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/s4u/maven-settings-action#readme",
   "dependencies": {
-    "@actions/core": "^1.4.0",
+    "@actions/core": "^1.5.0",
     "@xmldom/xmldom": "^0.7.1"
   },
   "devDependencies": {
