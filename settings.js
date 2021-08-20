@@ -26,8 +26,8 @@ const core = require('@actions/core');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
-const DOMParser = require('xmldom').DOMParser;
-const XMLSerializer = require('xmldom').XMLSerializer;
+const DOMParser = require('@xmldom/xmldom').DOMParser;
+const XMLSerializer = require('@xmldom/xmldom').XMLSerializer;
 
 function getSettingsPath() {
     return path.join(os.homedir(), '.m2', 'settings.xml');
