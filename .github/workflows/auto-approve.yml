@@ -1,25 +1,38 @@
-name: Auto approve
+name: Auto Approve
 
 on:
   pull_request_target
+
+permissions:
+  pull-requests: write
+  contents: write
 
 jobs:
   auto-approve:
     runs-on: ubuntu-latest
     steps:
 
-      - uses: alexwilson/enable-github-automerge-action@1.0.0
-        if: >
-          github.actor == 'dependabot[bot]'
-          || github.actor == 'dependabot-preview[bot]'
+      - name: Dependabot metadata
+        if: github.actor == 'dependabot[bot]'
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v1.1.1
         with:
-          merge-method: "REBASE"
-          github-token: "${{ secrets.TECH_TOKEN }}"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - uses: hmarr/auto-approve-action@v2.1.0
+      - name: Enable auto-merge for Dependabot PRs
         if: >
           github.actor == 'dependabot[bot]'
-          || github.actor == 'dependabot-preview[bot]'
+          && steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch'
+        run: gh pr merge --auto --rebase "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approve a PR
+        if: >
+          github.actor == 'dependabot[bot]'
           || github.actor == 'slawekjaranowski'
-        with:
-          github-token: "${{ secrets.TECH_TOKEN }}"
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
