@@ -3,10 +3,6 @@ name: Auto Approve
 on:
   pull_request_target
 
-permissions:
-  pull-requests: write
-  contents: write
-
 jobs:
   auto-approve:
     runs-on: ubuntu-latest
@@ -17,7 +13,7 @@ jobs:
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@v1.1.1
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.TECH_TOKEN }}"
 
       - name: Enable auto-merge for Dependabot PRs
         if: >
@@ -26,7 +22,7 @@ jobs:
         run: gh pr merge --auto --rebase "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TECH_TOKEN }}
 
       - name: Approve a PR
         if: >
@@ -35,4 +31,4 @@ jobs:
         run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TECH_TOKEN }}
