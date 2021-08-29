@@ -19,10 +19,13 @@ This project uses [Semantic Versioning](https://semver.org/).
 We recommended to use the latest and specific release version.
 
 In order to keep your project dependencies up to date you can watch this repository *(Releases only)*
-or use automatic tools like [Dependabot](https://dependabot.com/).
+or use automatic tools like [Dependabot](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/about-dependabot-version-updates).
 
 
  # Usage
+
+ You can try our action [Setup Maven with settings.xml](https://github.com/marketplace/actions/setup-maven-with-settings-xml) for completely maven environment setup.
+
 See [action.yml](action.yml)
 
 ## default ```settings.xml```
