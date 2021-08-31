@@ -24,7 +24,7 @@ or use automatic tools like [Dependabot](https://docs.github.com/en/code-securit
 
  # Usage
 
- You can try our action [Setup Maven with settings.xml](https://github.com/marketplace/actions/setup-maven-with-settings-xml) for completely maven environment setup.
+ You can try our action [Setup Maven Action](https://github.com/marketplace/actions/setup-maven-action) for completely maven environment setup.
 
 See [action.yml](action.yml)
 
