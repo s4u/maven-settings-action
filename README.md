@@ -43,6 +43,9 @@ steps:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
 
+Also you can use `path` argument if your settings.xml is stored in different location.
+
+
 All `server` attributes may be specified:
   * `id` _(required)_
   * `username`

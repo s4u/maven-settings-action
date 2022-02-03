@@ -689,3 +689,18 @@ test('genereate - override', () => {
         ])
     );
 })
+
+test('generate - custom path', () => {
+
+    if (!fs.existsSync(testHomePath)) {
+        fs.mkdirSync(testHomePath);
+    }
+
+    const mySettings =  path.join(testHomePath, 'settings_custom.xml');
+    process.env['INPUT_PATH'] = mySettings;
+    settings.generate();
+
+    const settingsStatus = fs.lstatSync(mySettings);
+    expect(settingsStatus.isFile()).toBeTruthy();
+    expect(settingsStatus.size).toBeGreaterThan(0);
+});
