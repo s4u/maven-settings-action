@@ -17,6 +17,6 @@ jobs:
       && !startsWith(github.event.head_commit.message , '[maven-release-plugin]')
 
     steps:
-      - uses: release-drafter/release-drafter@v5.17.6
+      - uses: release-drafter/release-drafter@v5.18.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
