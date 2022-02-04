@@ -6,6 +6,9 @@ branding:
   color: 'green'
 
 inputs:
+  path:
+    description: 'override default path to settings.xml which is $HOME/.m2/settings.xml'
+    required: false
   servers:
     description: 'servers definition in json array, eg: [{"id": "serverId", "username": "username", "password": "password"}]'
     required: false

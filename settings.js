@@ -30,7 +30,12 @@ const DOMParser = require('@xmldom/xmldom').DOMParser;
 const XMLSerializer = require('@xmldom/xmldom').XMLSerializer;
 
 function getSettingsPath() {
-    return path.join(os.homedir(), '.m2', 'settings.xml');
+    const _path = core.getInput('path');
+    if (!_path) {
+        return path.join(os.homedir(), '.m2', 'settings.xml');
+    } else {
+        return _path;
+    }
 }
 
 function getTemplate(templateName) {
