@@ -15,20 +15,20 @@ jobs:
         with:
           github-token: "${{ secrets.TECH_TOKEN }}"
 
-      - name: Enable auto-merge for Dependabot PRs
-        if: >
-          github.actor == 'dependabot[bot]'
-          && steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major'
-        run: gh pr merge --auto --rebase "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{ secrets.TECH_TOKEN }}
+#      - name: Enable auto-merge for Dependabot PRs
+#        if: >
+#          github.actor == 'dependabot[bot]'
+#          && steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major'
+#        run: gh pr merge --auto --rebase "$PR_URL"
+#        env:
+#          PR_URL: ${{github.event.pull_request.html_url}}
+#          GITHUB_TOKEN: ${{ secrets.TECH_TOKEN }}
 
-      - name: Approve a PR
-        if: >
-          github.actor == 'dependabot[bot]'
-          || github.actor == 'slawekjaranowski'
-        run: gh pr review --approve "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{ secrets.TECH_TOKEN }}
+#      - name: Approve a PR
+#        if: >
+#          github.actor == 'dependabot[bot]'
+#          || github.actor == 'slawekjaranowski'
+#        run: gh pr review --approve "$PR_URL"
+#        env:
+#          PR_URL: ${{github.event.pull_request.html_url}}
+#          GITHUB_TOKEN: ${{ secrets.TECH_TOKEN }}
