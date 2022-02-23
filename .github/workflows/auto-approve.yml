@@ -6,3 +6,5 @@ on:
 jobs:
   auto-approve:
     uses: s4u/.github/.github/workflows/auto-approve.yml@master
+    secrets:
+      TECH_TOKEN: ${{ secrets.TECH_TOKEN }}
