@@ -1,6 +1,6 @@
 {
   "name": "maven-settings-action",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Prepare maven settings",
   "main": "index.js",
   "scripts": {
