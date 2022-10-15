@@ -74,7 +74,7 @@ test('run with all feature', () => {
     process.env['INPUT_SONATYPESNAPSHOTS'] = true;
     process.env['INPUT_ORACLEREPO'] = true;
 
-    cp.execSync(`node ${indexPath}`, { env: process.env, stdio: 'inherit' });
+    cp.spawnSync('node', [ `${indexPath}` ], { env: process.env, stdio: 'inherit' });
 
     const settingsStatus = fs.lstatSync(settingsPath);
     expect(settingsStatus.isFile()).toBeTruthy();

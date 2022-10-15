@@ -56,5 +56,5 @@ afterAll(() => {
 
 
 test('run with default values', () => {
-    cp.execSync(`node ${cleanupPath}`, { env: process.env }).toString();
+    cp.spawnSync('node', [ `${cleanupPath}` ], { env: process.env }).toString();
 })

@@ -1,6 +1,6 @@
 {
   "name": "maven-settings-action",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Prepare maven settings",
   "main": "index.js",
   "scripts": {
@@ -26,11 +26,11 @@
   },
   "homepage": "https://github.com/s4u/maven-settings-action#readme",
   "dependencies": {
-    "@actions/core": "^1.6.0",
-    "@xmldom/xmldom": "^0.8.1"
+    "@actions/core": "^1.10.0",
+    "@xmldom/xmldom": "^0.8.3"
   },
   "devDependencies": {
-    "eslint": "^8.12.0",
-    "jest": "^27.5.1"
+    "eslint": "^8.25.0",
+    "jest": "^28.1.3"
   }
 }
