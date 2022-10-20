@@ -3,4 +3,5 @@
     <profiles/>
     <servers />
     <mirrors />
+    <proxies />
 </settings>
