@@ -15,6 +15,8 @@ inputs:
   mirrors:
     description: 'mirrors definition in json array, eg: [{"id": "id", "name": "name", "mirrorOf": "mirrorOf", "url": "url"}]'
     required: false
+  proxies:
+    description: 'proxies definition in json array, eg: [{"id": "id", "active": "active", "protocol": "protocol", "host": "hostl", "port": "port", "nonProxyHosts", "nonProxyHosts"}]'
   properties:
     description: 'json array with properties, eg [{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
     required: false

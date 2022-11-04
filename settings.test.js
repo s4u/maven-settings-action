@@ -436,6 +436,83 @@ test('fillMirrors incorrect fields', () => {
     );
 });
 
+test("fillProxies do noting if no params", () => {
+    const xml = stringAsXml("<proxies/>");
+
+    settings.fillProxies(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe("<proxies/>");
+    expect(consoleOutput).toEqual([]);
+})
+
+test("fillProxies one proxy", () => {
+    const xml = stringAsXml("<proxies/>");
+
+    process.env['INPUT_PROXIES'] = `[{"id": "proxyId", "active": "isActive", "protocol": "proxyProtocol",
+     "host": "proxyHost", "port": "proxyPort", "nonProxyHosts": "nonProxyHost"}]`;
+    
+    settings.fillProxies(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<proxies><proxy>
+    <id>proxyId</id>
+    <active>isActive</active>
+    <protocol>proxyProtocol</protocol>
+    <host>proxyHost</host>
+    <port>proxyPort</port>
+    <nonProxyHosts>nonProxyHost</nonProxyHosts>
+</proxy></proxies>`)
+
+})
+
+test("fillProxies two proxies", () => {
+    const xml = stringAsXml("<proxies/>");
+
+    process.env['INPUT_PROXIES'] = `[{"id": "proxyId1", "active": "isActive1", "protocol": "proxyProtocol1", 
+    "host": "proxyHost1", "port": "proxyPort1", "nonProxyHosts": "nonProxyHost1"}, 
+    {"id": "proxyId2", "active": "isActive2", "protocol": "proxyProtocol2",
+    "host": "proxyHost2", "port": "proxyPort2", "nonProxyHosts": "nonProxyHost2"}]`;
+
+    settings.fillProxies(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<proxies><proxy>
+    <id>proxyId1</id>
+    <active>isActive1</active>
+    <protocol>proxyProtocol1</protocol>
+    <host>proxyHost1</host>
+    <port>proxyPort1</port>
+    <nonProxyHosts>nonProxyHost1</nonProxyHosts>
+</proxy><proxy>
+    <id>proxyId2</id>
+    <active>isActive2</active>
+    <protocol>proxyProtocol2</protocol>
+    <host>proxyHost2</host>
+    <port>proxyPort2</port>
+    <nonProxyHosts>nonProxyHost2</nonProxyHosts>
+</proxy></proxies>`)
+
+})
+
+test('fillProxies incorrect fields', () => {
+
+    const xml = stringAsXml("<proxies/>");
+
+    process.env['INPUT_PROXIES'] = '[{"idx": "id1"}]';
+
+    settings.fillProxies(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+
+    expect(xmlStr).toBe('<proxies/>');
+    expect(consoleOutput).toEqual(
+        expect.arrayContaining([
+            expect.stringMatching(/::error::proxies must contain id, active, protocol, host, port and nonProxyHosts/)
+        ])
+    );
+})
+
 test('addApacheSnapshots', () => {
 
     process.env['INPUT_APACHESNAPSHOTS'] = "true";

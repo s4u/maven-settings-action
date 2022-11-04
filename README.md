@@ -101,6 +101,14 @@ steps:
     mirrors: '[{"id": "mirrorId", "name": "mirrorName", "mirrorOf": "mirrorOf", "url": "mirrorUrl"}]'
 ```
 
+## ```settings.xml``` with proxies section
+```yml
+step:
+- uses: s4u/maven-settings-action@v2.7.0
+  with:
+    proxies: '[{"id": "proxyId", "active": "isActive", "protocol": "proxyProtocol", "host": "proxyHost", "port": "proxyPort", "nonProxyHosts": "nonProxyHost"}]'
+```
+
 ## ```settings.xml``` with properties
 ```yml
 steps:
