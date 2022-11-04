@@ -80,17 +80,17 @@ beforeEach(() => {
     consoleOutput = [];
 });
 
-afterAll(() => {
-    try {
-        fs.rmdirSync(path.dirname(settingsPath));
-    } catch (error) {
-    }
+// afterAll(() => {
+//     try {
+//         fs.rmdirSync(path.dirname(settingsPath));
+//     } catch (error) {
+//     }
 
-    try {
-        fs.rmdirSync(testHomePath);
-    } catch (error) {
-    }
-});
+//     try {
+//         fs.rmdirSync(testHomePath);
+//     } catch (error) {
+//     }
+// });
 
 afterEach(() => {
 

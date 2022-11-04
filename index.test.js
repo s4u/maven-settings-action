@@ -47,18 +47,18 @@ afterEach(() => {
     }
 });
 
-afterAll(() => {
+// afterAll(() => {
 
-    try {
-        fs.rmdirSync(path.dirname(settingsPath));
-    } catch (error) {
-    }
+//     try {
+//         fs.rmdirSync(path.dirname(settingsPath));
+//     } catch (error) {
+//     }
 
-    try {
-        fs.rmdirSync(testHomePath);
-    } catch (error) {
-    }
-});
+//     try {
+//         fs.rmdirSync(testHomePath);
+//     } catch (error) {
+//     }
+// });
 
 
 test('run with all feature', () => {
@@ -68,6 +68,7 @@ test('run with all feature', () => {
     process.env['INPUT_GITHUBSERVER'] = true;
 
     process.env['INPUT_MIRRORS'] = '[{"id": "mirrorId", "name": "mirror Name", "mirrorOf": "mirror Off *", "url": "mirror url"}]';
+    process.env['INPUT_PROXIES'] = '[{"id": "id", "active": "active", "protocol": "protocol", "host": "hostl", "port": "port", "nonProxyHosts", "nonProxyHosts"}]';
     process.env['INPUT_PROPERTIES'] = '[{"prop1": "value1"}, {"prop2": "value2"}]'
 
     process.env['INPUT_APACHESNAPSHOTS'] = true;
@@ -75,7 +76,6 @@ test('run with all feature', () => {
     process.env['INPUT_ORACLEREPO'] = true;
 
     cp.spawnSync('node', [ `${indexPath}` ], { env: process.env, stdio: 'inherit' });
-
     const settingsStatus = fs.lstatSync(settingsPath);
     expect(settingsStatus.isFile()).toBeTruthy();
     expect(settingsStatus.size).toBeGreaterThan(0);
@@ -242,5 +242,6 @@ test('run with all feature', () => {
     <mirrorOf>mirror Off *</mirrorOf>
     <url>mirror url</url>
 </mirror></mirrors>
+    <proxies/>
 </settings>`);
 })
