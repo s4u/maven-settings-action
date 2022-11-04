@@ -293,6 +293,7 @@ module.exports = {
     writeSettings,
     fillMirrors,
     fillServers,
+    fillProxies,
     fillServerForGithub,
     fillProperties,
     addApacheSnapshots,
