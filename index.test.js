@@ -47,18 +47,18 @@ afterEach(() => {
     }
 });
 
-// afterAll(() => {
+afterAll(() => {
 
-//     try {
-//         fs.rmdirSync(path.dirname(settingsPath));
-//     } catch (error) {
-//     }
+    try {
+        fs.rmdirSync(path.dirname(settingsPath));
+    } catch (error) {
+    }
 
-//     try {
-//         fs.rmdirSync(testHomePath);
-//     } catch (error) {
-//     }
-// });
+    try {
+        fs.rmdirSync(testHomePath);
+    } catch (error) {
+    }
+});
 
 
 test('run with all feature', () => {
