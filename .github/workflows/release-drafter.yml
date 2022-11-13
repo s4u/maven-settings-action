@@ -10,4 +10,4 @@ jobs:
   update_release_draft:
     name: Update Release Draft
     concurrency: release-drafter
-    uses: s4u/.github/.github/workflows/auto-approve.yml@master
+    uses: s4u/.github/.github/workflows/release-drafter.yml@master
