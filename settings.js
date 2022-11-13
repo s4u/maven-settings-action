@@ -152,6 +152,35 @@ function fillMirrors(template) {
     JSON.parse(mirrors).forEach((mirror) => fillMirror(template, mirror.id, mirror.name, mirror.mirrorOf, mirror.url));
 }
 
+function fillProxies(template) {
+    
+    const proxies = core.getInput('proxies');
+
+    if (!proxies) {
+        return;
+    }
+
+    JSON.parse(proxies).forEach((proxy) => fillProxy(template, proxy.id, proxy.active, proxy.protocol, proxy.host, proxy.port, proxy.nonProxyHosts));
+}
+
+function fillProxy(template, id, active, protocol, host, port, nonProxyHosts) {
+    if(!id || !active || !protocol || !host || !port || !nonProxyHosts) {
+        core.setFailed('proxies must contain id, active, protocol, host, port and nonProxyHosts');
+        return;
+    }
+
+    const proxyXml = getTemplate('proxy.xml');
+    proxyXml.getElementsByTagName("id")[0].textContent = id;
+    proxyXml.getElementsByTagName("active")[0].textContent = active;
+    proxyXml.getElementsByTagName("protocol")[0].textContent = protocol;
+    proxyXml.getElementsByTagName("host")[0].textContent = host;
+    proxyXml.getElementsByTagName("port")[0].textContent = port;
+    proxyXml.getElementsByTagName("nonProxyHosts")[0].textContent = nonProxyHosts;
+
+    const proxiesXml = template.getElementsByTagName('proxies')[0];
+    proxiesXml.appendChild(proxyXml);
+}
+
 function isInputTrue(inputName) {
     const val = core.getInput(inputName);
     return val && val.toLocaleLowerCase() == 'true';
@@ -230,6 +259,7 @@ function generate() {
     }
 
     const settingsXml = getTemplate('settings.xml');
+    fillProxies(settingsXml);
     fillMirrors(settingsXml);
     fillServers(settingsXml, 'servers');
     fillServers(settingsXml, 'oracleServers');
@@ -263,6 +293,7 @@ module.exports = {
     writeSettings,
     fillMirrors,
     fillServers,
+    fillProxies,
     fillServerForGithub,
     fillProperties,
     addApacheSnapshots,

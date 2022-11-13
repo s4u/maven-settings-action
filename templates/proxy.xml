@@ -1,0 +1,8 @@
+<proxy>
+    <id />
+    <active />
+    <protocol />
+    <host />
+    <port />
+    <nonProxyHosts />
+</proxy>
