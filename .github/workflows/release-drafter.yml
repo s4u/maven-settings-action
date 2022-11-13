@@ -9,8 +9,5 @@ on:
 jobs:
   update_release_draft:
     name: Update Release Draft
-    runs-on: ubuntu-latest
     concurrency: release-drafter
-
-    steps:
-      - uses: s4u/.github/.github/workflows/auto-approve.yml@master
+    uses: s4u/.github/.github/workflows/auto-approve.yml@master
