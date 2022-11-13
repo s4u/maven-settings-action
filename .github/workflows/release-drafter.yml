@@ -12,11 +12,5 @@ jobs:
     runs-on: ubuntu-latest
     concurrency: release-drafter
 
-    if: >
-      github.repository_owner == 's4u'
-      && !startsWith(github.event.head_commit.message , '[maven-release-plugin]')
-
     steps:
-      - uses: release-drafter/release-drafter@v5.21.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: s4u/.github/.github/workflows/auto-approve.yml@master
