@@ -9,5 +9,4 @@ on:
 jobs:
   update_release_draft:
     name: Update Release Draft
-    concurrency: release-drafter
     uses: s4u/.github/.github/workflows/release-drafter.yml@master
