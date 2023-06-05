@@ -30,7 +30,7 @@
     "@xmldom/xmldom": "^0.8.8"
   },
   "devDependencies": {
-    "eslint": "^8.41.0",
+    "eslint": "^8.42.0",
     "jest": "^28.1.3"
   }
 }
