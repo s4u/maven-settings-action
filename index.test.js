@@ -74,6 +74,7 @@ test('run with all feature', () => {
     process.env['INPUT_APACHESNAPSHOTS'] = true;
     process.env['INPUT_SONATYPESNAPSHOTS'] = true;
     process.env['INPUT_ORACLEREPO'] = true;
+    process.env['INPUT_REPOSITORIES'] = '[{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
 
     cp.spawnSync('node', [ `${indexPath}` ], { env: process.env, stdio: 'inherit' });
     const settingsStatus = fs.lstatSync(settingsPath);
@@ -200,6 +201,19 @@ test('run with all feature', () => {
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+</profile>
+<profile>
+    <id>_custom_repositories_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories> <repository>
+     <id>repoId</id>
+     <name>repoName</name>
+     <url>url</url>
+     <snapshots><enabled>true</enabled></snapshots>
+ </repository></repositories>
+    <pluginRepositories/>
 </profile></profiles>
     <servers>
 <server>

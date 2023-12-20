@@ -168,6 +168,15 @@ steps:
     oracleRepo: true
 ```
 
+## ```settings.xml``` with custom repositories
+```yml
+steps:
+- uses: s4u/maven-settings-action@v2.8.0
+  with:
+    repositories: '[{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
+```
+
+
 ## GitHub actions secrets
 
 It is also possible pass in Github Secrets e.g.
