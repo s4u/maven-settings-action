@@ -43,6 +43,9 @@ inputs:
     description: 'add Oracle Maven Repository'
     default: "false"
     required: false
+  repositories:
+    description: 'list of custom repositories as json array, e.g: [{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
+    required: false
 
 runs:
   using: 'node16'
