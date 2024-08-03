@@ -213,10 +213,10 @@ function fillProxies(template) {
         return;
     }
 
-    JSON.parse(proxies).forEach((proxy) => fillProxy(template, proxy.id, proxy.active, proxy.protocol, proxy.host, proxy.port, proxy.nonProxyHosts));
+    JSON.parse(proxies).forEach((proxy) => fillProxy(template, proxy.id, proxy.active, proxy.protocol, proxy.host, proxy.port, proxy.nonProxyHosts, proxy.user, proxy.password));
 }
 
-function fillProxy(template, id, active, protocol, host, port, nonProxyHosts) {
+function fillProxy(template, id, active, protocol, host, port, nonProxyHosts, proxyUser, proxyPassword) {
     if(!id || !active || !protocol || !host || !port || !nonProxyHosts) {
         core.setFailed('proxies must contain id, active, protocol, host, port and nonProxyHosts');
         return;
@@ -230,6 +230,13 @@ function fillProxy(template, id, active, protocol, host, port, nonProxyHosts) {
     proxyXml.getElementsByTagName("port")[0].textContent = port;
     proxyXml.getElementsByTagName("nonProxyHosts")[0].textContent = nonProxyHosts;
 
+    if(proxyUser) {
+        jsonToXml(proxyXml, proxyXml.documentElement, {username: proxyUser});
+    }
+    if(proxyPassword) {
+        jsonToXml(proxyXml, proxyXml.documentElement, {password: proxyPassword});
+    }
+    
     const proxiesXml = template.getElementsByTagName('proxies')[0];
     proxiesXml.appendChild(proxyXml);
 }

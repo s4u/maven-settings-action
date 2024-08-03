@@ -466,6 +466,26 @@ test("fillProxies one proxy", () => {
 
 })
 
+test("fillProxies one proxy with auth info", () => {
+    const xml = stringAsXml("<proxies/>");
+
+    process.env['INPUT_PROXIES'] = `[{"id": "proxyId", "active": "isActive", "protocol": "proxyProtocol",
+     "host": "proxyHost", "port": "proxyPort", "nonProxyHosts": "nonProxyHost", "user": "proxyUser", "password": "somepassword"}]`;
+    
+    settings.fillProxies(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<proxies><proxy>
+    <id>proxyId</id>
+    <active>isActive</active>
+    <protocol>proxyProtocol</protocol>
+    <host>proxyHost</host>
+    <port>proxyPort</port>
+    <nonProxyHosts>nonProxyHost</nonProxyHosts>
+<username>proxyUser</username><password>somepassword</password></proxy></proxies>`)
+
+})
+
 test("fillProxies two proxies", () => {
     const xml = stringAsXml("<proxies/>");
 
