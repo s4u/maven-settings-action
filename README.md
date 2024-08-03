@@ -106,8 +106,9 @@ steps:
 step:
 - uses: s4u/maven-settings-action@v3.0.0
   with:
-    proxies: '[{"id": "proxyId", "active": "isActive", "protocol": "proxyProtocol", "host": "proxyHost", "port": "proxyPort", "nonProxyHosts": "nonProxyHost"}]'
+    proxies: '[{"id": "proxyId", "active": "isActive", "protocol": "proxyProtocol", "host": "proxyHost", "port": "proxyPort", "nonProxyHosts": "nonProxyHost", "user": "proxUser", "password": "proxPassword"}]'
 ```
+Note: Authentication details are optional.
 
 ## ```settings.xml``` with properties
 ```yml
