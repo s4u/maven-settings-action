@@ -80,7 +80,7 @@ steps:
 result will be:
 
 ```xml
-<server>
+<servers><server>
     <id>serverId</id>
     <configuration>
       <item1>value1</item1>
@@ -174,6 +174,14 @@ steps:
 - uses: s4u/maven-settings-action@v3.0.0
   with:
     repositories: '[{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
+```
+
+## ```settings.xml``` with custom plugin repositories
+```yml
+steps:
+- uses: s4u/maven-settings-action@v3.0.0
+  with:
+    pluginRepositories: '[{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
 ```
 
 

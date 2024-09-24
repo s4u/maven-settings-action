@@ -49,7 +49,7 @@ afterAll(() => {
     }
 
     try {
-        fs.rmdirSync(testHomePath);
+        fs.rmSync(testHomePath, { recursive: true });
     } catch (error) {
     }
 });

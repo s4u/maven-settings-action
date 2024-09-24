@@ -124,7 +124,7 @@ function fillServers(template, templateName) {
             server.configuration));
 }
 
-function fillRepository(templateXml, templateName, id, name, url, snapshots) {
+function fillRepository(templateXml, templateName, id, name, url, releases, snapshots) {
 
     if (!id || !url) {
         core.setFailed(templateName + ' must contain id and url');
@@ -148,22 +148,30 @@ function fillRepository(templateXml, templateName, id, name, url, snapshots) {
         }
     }
 
-    const snapshotsTag = repositoryXml.getElementsByTagName('snapshots')[0];
-    if (snapshots) {
-        jsonToXml(templateXml, snapshotsTag, snapshots);
-    } else {
-        repositoryXml.documentElement.removeChild(snapshotsTag);
+    const additionalTags = {
+        'releases': releases,
+        'snapshots': snapshots
+    };
+    for (const tag in additionalTags) {
+        const repositoryTag = repositoryXml.getElementsByTagName(tag)[0];
+        const tagValue = additionalTags[tag];
+        if (tagValue) {
+            jsonToXml(templateXml, repositoryTag, tagValue);
+        } else {
+            repositoryXml.documentElement.removeChild(repositoryTag);
+        }
     }
 
-    const repositoriesXml = templateXml.getElementsByTagName('repositories')[0];
+    const repositoriesXml = templateXml.getElementsByTagName(templateName)[0];
     repositoriesXml.appendChild(repositoryXml);
 }
 
-function fillRepositories(template, templateName) {
+function fillRepositories(template) {
 
-    const repositories = core.getInput(templateName);
+    const repositories = core.getInput('repositories');
+    const pluginRepositories = core.getInput('pluginRepositories');
 
-    if (!repositories) {
+    if (!repositories && !pluginRepositories) {
         return;
     }
 
@@ -172,9 +180,16 @@ function fillRepositories(template, templateName) {
     const profilesXml = template.getElementsByTagName('profiles')[0];
     profilesXml.appendChild(customRepositoriesTemplate);
 
-    JSON.parse(repositories).forEach((repository) =>
-      fillRepository(customRepositoriesTemplate, templateName, repository.id, repository.name, repository.url,
-        repository.snapshots));
+    if (repositories) {
+        JSON.parse(repositories).forEach((repository) =>
+            fillRepository(customRepositoriesTemplate, 'repositories',
+                repository.id, repository.name, repository.url, repository.releases, repository.snapshots));
+    }
+    if (pluginRepositories) {
+        JSON.parse(pluginRepositories).forEach((repository) =>
+            fillRepository(customRepositoriesTemplate, 'pluginRepositories',
+                repository.id, repository.name, repository.url, repository.releases, repository.snapshots));
+    }
 }
 
 function fillMirror(template, id, name, mirrorOf, url) {
@@ -321,7 +336,7 @@ function generate() {
     addApacheSnapshots(settingsXml);
     addSonatypeSnapshots(settingsXml);
     addOracleRepo(settingsXml);
-    fillRepositories(settingsXml,'repositories')
+    fillRepositories(settingsXml)
     writeSettings(settingsPath, settingsXml);
     core.saveState('maven-settings', 'ok');
 }
