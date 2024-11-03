@@ -55,7 +55,7 @@ afterAll(() => {
     }
 
     try {
-        fs.rmdirSync(testHomePath);
+        fs.rmSync(testHomePath, { recursive: true });
     } catch (error) {
     }
 });
@@ -75,6 +75,7 @@ test('run with all feature', () => {
     process.env['INPUT_SONATYPESNAPSHOTS'] = true;
     process.env['INPUT_ORACLEREPO'] = true;
     process.env['INPUT_REPOSITORIES'] = '[{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
+    process.env['INPUT_PLUGINREPOSITORIES'] = '[{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
 
     cp.spawnSync('node', [ `${indexPath}` ], { env: process.env, stdio: 'inherit' });
     const settingsStatus = fs.lstatSync(settingsPath);
@@ -213,7 +214,12 @@ test('run with all feature', () => {
      <url>url</url>
      <snapshots><enabled>true</enabled></snapshots>
  </repository></repositories>
-    <pluginRepositories/>
+    <pluginRepositories> <pluginRepository>
+     <id>repoId</id>
+     <name>repoName</name>
+     <url>url</url>
+     <snapshots><enabled>true</enabled></snapshots>
+ </pluginRepository></pluginRepositories>
 </profile></profiles>
     <servers>
 <server>

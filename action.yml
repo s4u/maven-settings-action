@@ -46,6 +46,9 @@ inputs:
   repositories:
     description: 'list of custom repositories as json array, e.g: [{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
     required: false
+  pluginRepositories:
+    description: 'list of custom plugin repositories as json array, e.g: [{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
+    required: false
 
 runs:
   using: 'node20'

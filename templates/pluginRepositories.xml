@@ -1,7 +1,7 @@
- <repository>
+ <pluginRepository>
      <id/>
      <name/>
      <url/>
      <releases/>
      <snapshots/>
- </repository>
+ </pluginRepository>

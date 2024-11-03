@@ -87,7 +87,7 @@ afterAll(() => {
     }
 
     try {
-        fs.rmdirSync(testHomePath);
+        fs.rmSync(testHomePath, { recursive: true });
     } catch (error) {
     }
 });
@@ -466,6 +466,26 @@ test("fillProxies one proxy", () => {
 
 })
 
+test("fillProxies one proxy with auth info", () => {
+    const xml = stringAsXml("<proxies/>");
+
+    process.env['INPUT_PROXIES'] = `[{"id": "proxyId", "active": "isActive", "protocol": "proxyProtocol",
+     "host": "proxyHost", "port": "proxyPort", "nonProxyHosts": "nonProxyHost", "user": "proxyUser", "password": "somepassword"}]`;
+    
+    settings.fillProxies(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<proxies><proxy>
+    <id>proxyId</id>
+    <active>isActive</active>
+    <protocol>proxyProtocol</protocol>
+    <host>proxyHost</host>
+    <port>proxyPort</port>
+    <nonProxyHosts>nonProxyHost</nonProxyHosts>
+<username>proxyUser</username><password>somepassword</password></proxy></proxies>`)
+
+})
+
 test("fillProxies two proxies", () => {
     const xml = stringAsXml("<proxies/>");
 
@@ -821,14 +841,57 @@ test('addCustomRepositories - one with snapshots one without', () => {
      <id>repoId</id>
      <name>repoName</name>
      <url>url</url>
+     
      <snapshots><enabled>true</enabled></snapshots>
  </repository> <repository>
      <id>repoId2</id>
      
      <url>url2</url>
      
+     
  </repository></repositories>
     <pluginRepositories/>
+</profile></profiles>`);
+});
+
+test('addCustomPluginRepositories - one with releases and snapshots one without', () => {
+
+    process.env['INPUT_PLUGINREPOSITORIES'] = `
+      [{"id":"repoId",
+        "name":"repoName",
+        "url":"url",
+        "releases":{"enabled":false},
+        "snapshots":{"enabled":true}
+       },{
+        "id":"repoId2",
+        "url":"url2"
+      }]`
+
+    const xml = stringAsXml('<profiles/>');
+
+    settings.fillRepositories(xml,'pluginRepositories');
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<profiles>
+<profile>
+    <id>_custom_repositories_</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories/>
+    <pluginRepositories> <pluginRepository>
+     <id>repoId</id>
+     <name>repoName</name>
+     <url>url</url>
+     <releases><enabled>false</enabled></releases>
+     <snapshots><enabled>true</enabled></snapshots>
+ </pluginRepository> <pluginRepository>
+     <id>repoId2</id>
+     
+     <url>url2</url>
+     
+     
+ </pluginRepository></pluginRepositories>
 </profile></profiles>`);
 });
 
