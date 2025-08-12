@@ -118,7 +118,7 @@ steps:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
 
-## ```settings.xml``` with https://oss.sonatype.org/content/repositories/snapshots in repository list
+## ```settings.xml``` with https://central.sonatype.com/repository/maven-snapshots in repository list
 
 ```yml
 steps:
