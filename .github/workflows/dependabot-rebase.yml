@@ -1,0 +1,14 @@
+name: Dependabot Rebase
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  dependabot-rebase:
+    uses: s4u/.github/.github/workflows/dependabot-rebase.yml@master
+    secrets:
+      TECH_TOKEN: ${{ secrets.TECH_TOKEN }}
