@@ -22,10 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-const cp = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const process = require('process');
+import cp from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import process from 'process';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const cleanupPath = path.join(__dirname, 'cleanup.js');
 

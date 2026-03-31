@@ -3,9 +3,10 @@
   "version": "4.0.0",
   "description": "Prepare maven settings",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint index.js settings.js",
-    "test": "eslint index.js settings.js && jest --coverage",
+    "test": "eslint index.js settings.js && node --experimental-vm-modules node_modules/.bin/jest --coverage",
     "version": "./update-readme.sh",
     "postversion": "git tag --delete v$npm_new_version"
   },

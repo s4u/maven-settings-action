@@ -22,12 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-const core = require('@actions/core');
-const os = require('os');
-const path = require('path');
-const fs = require('fs');
-const DOMParser = require('@xmldom/xmldom').DOMParser;
-const XMLSerializer = require('@xmldom/xmldom').XMLSerializer;
+import * as core from '@actions/core';
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function getSettingsPath() {
     const _path = core.getInput('path');
@@ -364,7 +366,7 @@ function cleanup() {
     }
 }
 
-module.exports = {
+export {
     getTemplate,
     writeSettings,
     fillMirrors,

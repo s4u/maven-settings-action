@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-const core = require('@actions/core');
-const settings = require('./settings');
+import * as core from '@actions/core';
+import * as settings from './settings.js';
 
 async function run() {
     try {

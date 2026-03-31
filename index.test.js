@@ -22,10 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-const process = require('process');
-const cp = require('child_process');
-const path = require('path');
-const fs = require('fs');
+import process from 'process';
+import cp from 'child_process';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const testHomePath = fs.mkdtempSync(".m2");
 const settingsPath = path.join(testHomePath, '.m2', 'settings.xml');

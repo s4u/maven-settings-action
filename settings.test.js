@@ -22,14 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-const os = require('os');
-const process = require('process');
-const DOMParser = require('@xmldom/xmldom').DOMParser;
-const XMLSerializer = require('@xmldom/xmldom').XMLSerializer;
-const fs = require('fs');
-const path = require('path');
+import os from 'os';
+import process from 'process';
+import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
+import fs from 'fs';
+import path from 'path';
 
-const settings = require('./settings');
+import * as settings from './settings.js';
 
 var xmlTestProfile = undefined;
 
