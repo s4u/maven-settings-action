@@ -15,14 +15,13 @@ const compat = new FlatCompat({
 export default [...compat.extends("eslint:recommended"), {
     languageOptions: {
         globals: {
-            ...globals.commonjs,
             ...globals.node,
             Atomics: "readonly",
             SharedArrayBuffer: "readonly",
         },
 
-        ecmaVersion: 2018,
-        sourceType: "commonjs",
+        ecmaVersion: 2022,
+        sourceType: "module",
     },
 
     rules: {},

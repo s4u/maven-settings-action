@@ -3,9 +3,10 @@
   "version": "4.0.0",
   "description": "Prepare maven settings",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint index.js settings.js",
-    "test": "eslint index.js settings.js && jest --coverage",
+    "test": "eslint index.js settings.js && node --experimental-vm-modules node_modules/jest-cli/bin/jest.js --coverage",
     "version": "./update-readme.sh",
     "postversion": "git tag --delete v$npm_new_version"
   },
@@ -26,7 +27,7 @@
   },
   "homepage": "https://github.com/s4u/maven-settings-action#readme",
   "dependencies": {
-    "@actions/core": "^2.0.3",
+    "@actions/core": "^3.0.0",
     "@xmldom/xmldom": "^0.8.11"
   },
   "devDependencies": {
