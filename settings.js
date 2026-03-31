@@ -108,7 +108,7 @@ function fillServer(templateXml, templateName, id, username, password, privateKe
     }
 
     const serversXml = templateXml.getElementsByTagName('servers')[0];
-    serversXml.appendChild(serverXml);
+    while (serverXml.firstChild) serversXml.appendChild(serverXml.firstChild);
 }
 
 function fillServers(template, templateName) {
@@ -165,7 +165,7 @@ function fillRepository(templateXml, templateName, id, name, url, releases, snap
     }
 
     const repositoriesXml = templateXml.getElementsByTagName(templateName)[0];
-    repositoriesXml.appendChild(repositoryXml);
+    while (repositoryXml.firstChild) repositoriesXml.appendChild(repositoryXml.firstChild);
 }
 
 function fillRepositories(template) {
@@ -179,8 +179,6 @@ function fillRepositories(template) {
 
 
     const customRepositoriesTemplate = getTemplate('custom-repositories.xml');
-    const profilesXml = template.getElementsByTagName('profiles')[0];
-    profilesXml.appendChild(customRepositoriesTemplate);
 
     if (repositories) {
         JSON.parse(repositories).forEach((repository) =>
@@ -192,6 +190,9 @@ function fillRepositories(template) {
             fillRepository(customRepositoriesTemplate, 'pluginRepositories',
                 repository.id, repository.name, repository.url, repository.releases, repository.snapshots));
     }
+
+    const profilesXml = template.getElementsByTagName('profiles')[0];
+    while (customRepositoriesTemplate.firstChild) profilesXml.appendChild(customRepositoriesTemplate.firstChild);
 }
 
 function fillMirror(template, id, name, mirrorOf, url) {
@@ -208,7 +209,7 @@ function fillMirror(template, id, name, mirrorOf, url) {
     mirrorXml.getElementsByTagName('url')[0].textContent = url;
 
     const mirrorsXml = template.getElementsByTagName('mirrors')[0];
-    mirrorsXml.appendChild(mirrorXml);
+    while (mirrorXml.firstChild) mirrorsXml.appendChild(mirrorXml.firstChild);
 }
 
 function fillMirrors(template) {
@@ -255,7 +256,7 @@ function fillProxy(template, id, active, protocol, host, port, nonProxyHosts, pr
     }
     
     const proxiesXml = template.getElementsByTagName('proxies')[0];
-    proxiesXml.appendChild(proxyXml);
+    while (proxyXml.firstChild) proxiesXml.appendChild(proxyXml.firstChild);
 }
 
 function isInputTrue(inputName) {
@@ -292,14 +293,14 @@ function fillProperties(template) {
     });
 
     const profilesXml = template.getElementsByTagName('profiles')[0];
-    profilesXml.appendChild(propertiesProfileXml);
+    while (propertiesProfileXml.firstChild) profilesXml.appendChild(propertiesProfileXml.firstChild);
 
 }
 
 function addProfile(template, profileName) {
     const sonatypeXml = getTemplate(profileName);
     const profilesXml = template.getElementsByTagName('profiles')[0];
-    profilesXml.appendChild(sonatypeXml);
+    while (sonatypeXml.firstChild) profilesXml.appendChild(sonatypeXml.firstChild);
 }
 
 function addApacheSnapshots(template) {
