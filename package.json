@@ -35,5 +35,10 @@
     "eslint": "^10.11.0",
     "globals": "^17.12.0",
     "jest": "^30.5.2"
+  },
+  "overrides": {
+    "@istanbuljs/load-nyc-config": {
+      "js-yaml": "^4.1.0"
+    }
   }
 }
