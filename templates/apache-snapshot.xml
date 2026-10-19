@@ -1,9 +1,6 @@
 
 <profile>
     <id>_apache-snapshots_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>apache.snapshots.https</id>

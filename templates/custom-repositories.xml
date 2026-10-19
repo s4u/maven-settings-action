@@ -1,9 +1,6 @@
 
 <profile>
     <id>_custom_repositories_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories/>
     <pluginRepositories/>
 </profile>
