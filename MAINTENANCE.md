@@ -15,11 +15,10 @@ or
 
  - push commit
 
- - checkout release/vX
+ - checkout releases/vX
  - merge master and push
- - run
-    npm update
-    npm install
-    npm prune --production
+ - run - dependencies must be the same as on master, so don't use `npm update` here
+    npm ci
+    npm prune --omit=dev
  - commit and push "update dependency after merge from master"
  - git tag and git push --tags
