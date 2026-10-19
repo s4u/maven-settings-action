@@ -31,14 +31,14 @@ See [action.yml](action.yml)
 ## default ```settings.xml```
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
 ```
 
 ## ```settings.xml``` with servers section
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
@@ -63,7 +63,7 @@ Please refer to the [servers](http://maven.apache.org/settings.html#Servers) doc
 
 ``` yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     servers: |
       [{
@@ -101,7 +101,7 @@ Additional origins can be declared with `repositoryOrigins`:
 
 ``` yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     servers: |
       [{
@@ -129,7 +129,7 @@ result will be:
 ## ```settings.xml``` with mirrors section
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     mirrors: '[{"id": "mirrorId", "name": "mirrorName", "mirrorOf": "mirrorOf", "url": "mirrorUrl"}]'
 ```
@@ -137,7 +137,7 @@ steps:
 ## ```settings.xml``` with proxies section
 ```yml
 step:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     proxies: '[{"id": "proxyId", "active": "isActive", "protocol": "proxyProtocol", "host": "proxyHost", "port": "proxyPort", "nonProxyHosts": "nonProxyHost", "user": "proxUser", "password": "proxPassword"}]'
 ```
@@ -146,7 +146,7 @@ Note: Authentication details are optional.
 ## ```settings.xml``` with properties
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     properties: '[{"propertyName1": "propertyValue1"}, {"propertyName2": "propertyValue2"}]'
 ```
@@ -155,7 +155,7 @@ steps:
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     sonatypeSnapshots: true
 ```
@@ -164,7 +164,7 @@ steps:
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     apacheSnapshots: true
 ```
@@ -172,7 +172,7 @@ steps:
 ## Do not override existing ```settings.xml```, from version **2.0** file is override by default :
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     override: false
 ```
@@ -180,7 +180,7 @@ steps:
 ## Do not add github to server in ```settings.xml```, by default is added:
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     githubServer: false
 ```
@@ -189,7 +189,7 @@ steps:
 
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     oracleServers: '[{"id": "serverId", "username": "username", "password": "password"}]'
 ```
@@ -197,7 +197,7 @@ steps:
 ## ```settings.xml``` with [Oracle Maven Repository](https://docs.oracle.com/middleware/1213/core/MAVEN/config_maven_repo.htm#MAVEN9017)
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     oracleRepo: true
 ```
@@ -205,7 +205,7 @@ steps:
 ## ```settings.xml``` with custom repositories
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     repositories: '[{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
 ```
@@ -213,7 +213,7 @@ steps:
 ## ```settings.xml``` with custom plugin repositories
 ```yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     pluginRepositories: '[{"id":"repoId","name":"repoName","url":"url","snapshots":{"enabled":true}}]'
 ```
@@ -225,7 +225,7 @@ It is also possible pass in Github Secrets e.g.
 
 ``` yml
 steps:
-- uses: s4u/maven-settings-action@v4.0.0
+- uses: s4u/maven-settings-action@v4.1.0
   with:
     servers: |
       [{
@@ -255,7 +255,7 @@ steps:
         with:
           java-version: 8
 
-      - uses: s4u/maven-settings-action@v4.0.0
+      - uses: s4u/maven-settings-action@v4.1.0
 
       - run: mvn verify
 ```
