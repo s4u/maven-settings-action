@@ -70,7 +70,7 @@ function jsonToXml(templateXml, xmlTag, json) {
     }
 }
 
-function fillServer(templateXml, templateName, id, username, password, privateKey, passphrase, filePermissions, directoryPermissions, configurations) {
+function fillServer(templateXml, templateName, id, username, password, privateKey, passphrase, filePermissions, directoryPermissions, configurations, repositoryOrigins) {
 
     if (!id || (!username && !configurations)) {
         core.setFailed(templateName + ' must contain id, and username or configuration');
@@ -107,6 +107,17 @@ function fillServer(templateXml, templateName, id, username, password, privateKe
         }
     }
 
+    const repositoryOriginsTag = serverXml.getElementsByTagName('repositoryOrigins')[0];
+    if (repositoryOrigins && repositoryOrigins.length > 0) {
+        [].concat(repositoryOrigins).forEach((repositoryOrigin) => {
+            const repositoryOriginXml = templateXml.createElement('repositoryOrigin');
+            repositoryOriginXml.textContent = repositoryOrigin;
+            repositoryOriginsTag.appendChild(repositoryOriginXml);
+        });
+    } else {
+        serverXml.documentElement.removeChild(repositoryOriginsTag);
+    }
+
     const serversXml = templateXml.getElementsByTagName('servers')[0];
     while (serverXml.firstChild) serversXml.appendChild(serverXml.firstChild);
 }
@@ -123,7 +134,7 @@ function fillServers(template, templateName) {
         fillServer(template, templateName, server.id, server.username,
             server.password, server.privateKey, server.passphrase,
             server.filePermissions, server.directoryPermissions,
-            server.configuration));
+            server.configuration, server.repositoryOrigins));
 }
 
 function fillRepository(templateXml, templateName, id, name, url, releases, snapshots) {

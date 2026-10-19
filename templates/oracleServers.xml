@@ -24,4 +24,5 @@
             </all>
         </httpConfiguration>
     </configuration>
+    <repositoryOrigins />
 </server>

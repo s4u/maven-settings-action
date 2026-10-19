@@ -93,7 +93,7 @@ afterAll(() => {
 
 afterEach(() => {
 
-    for (key in process.env) {
+    for (const key in process.env) {
         if (key.match(/^INPUT_/) || key.match(/^GITHUB_/)) {
             delete process.env[key];
         }
@@ -236,6 +236,38 @@ test('fillServers with all attributes', () => {
     <filePermissions>664</filePermissions>
     <directoryPermissions>775</directoryPermissions>
     <configuration><prop1>prop1Value</prop1><prop2>prop2Value</prop2></configuration>
+</server></servers>`);
+});
+
+test('fillServers with repositoryOrigins', () => {
+
+    const xml = stringAsXml("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username1", "password": "password1", "repositoryOrigins": ["https://repo.example.org", "https://mirror.example.org:8443"]}]';
+
+    settings.fillServers(xml, 'servers');
+
+    expect(xmlAsString(xml)).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username1</username>
+    <password>password1</password>
+    <repositoryOrigins><repositoryOrigin>https://repo.example.org</repositoryOrigin><repositoryOrigin>https://mirror.example.org:8443</repositoryOrigin></repositoryOrigins>
+</server></servers>`);
+});
+
+test('fillServers with empty repositoryOrigins', () => {
+
+    const xml = stringAsXml("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username1", "repositoryOrigins": []}]';
+
+    settings.fillServers(xml, 'servers');
+
+    expect(xmlAsString(xml)).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username1</username>
 </server></servers>`);
 });
 

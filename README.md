@@ -55,6 +55,7 @@ All `server` attributes may be specified:
   * `filePermissions`
   * `directoryPermissions`
   * `configuration`
+  * `repositoryOrigins` - array of repository origins (`scheme://host[:port]`) the credentials may be used with
 
 Please refer to the [servers](http://maven.apache.org/settings.html#Servers) documentation for more information.
 
@@ -92,6 +93,38 @@ result will be:
 </server></servers>
 ```
 
+
+## ```settings.xml``` with servers section and repository origins
+
+Maven 3.10 / 4.0 binds server credentials to the origins of repositories and mirrors with the same id.
+Additional origins can be declared with `repositoryOrigins`:
+
+``` yml
+steps:
+- uses: s4u/maven-settings-action@v4.0.0
+  with:
+    servers: |
+      [{
+        "id": "serverId",
+        "username": "username",
+        "password": "password",
+        "repositoryOrigins": ["https://repo.example.org", "https://mirror.example.org:8443"]
+      }]
+```
+
+result will be:
+
+```xml
+<servers><server>
+    <id>serverId</id>
+    <username>username</username>
+    <password>password</password>
+    <repositoryOrigins>
+      <repositoryOrigin>https://repo.example.org</repositoryOrigin>
+      <repositoryOrigin>https://mirror.example.org:8443</repositoryOrigin>
+    </repositoryOrigins>
+</server></servers>
+```
 
 ## ```settings.xml``` with mirrors section
 ```yml
