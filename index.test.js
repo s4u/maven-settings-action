@@ -22,10 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-const process = require('process');
-const cp = require('child_process');
-const path = require('path');
-const fs = require('fs');
+import process from 'process';
+import cp from 'child_process';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const testHomePath = fs.mkdtempSync(".m2");
 const settingsPath = path.join(testHomePath, '.m2', 'settings.xml');
@@ -88,16 +91,10 @@ test('run with all feature', () => {
     <profiles>
 <profile>
     <id>_properties_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <properties><prop1>value1</prop1><prop2>value2</prop2></properties>
 </profile>
 <profile>
     <id>_apache-snapshots_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>apache.snapshots.https</id>
@@ -125,9 +122,6 @@ test('run with all feature', () => {
 </profile>
 <profile>
     <id>_sonatype-snapshots_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>central-snapshots</id>
@@ -155,9 +149,6 @@ test('run with all feature', () => {
 </profile>
 <profile>
     <id>_maven.oracle.com_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>maven.oracle.com</id>
@@ -185,9 +176,6 @@ test('run with all feature', () => {
 </profile>
 <profile>
     <id>_custom_repositories_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories> <repository>
      <id>repoId</id>
      <name>repoName</name>
@@ -250,5 +238,6 @@ test('run with all feature', () => {
     <port>proxyPort</port>
     <nonProxyHosts>nonProxyHost</nonProxyHosts>
 </proxy></proxies>
+    <activeProfiles><activeProfile>_properties_</activeProfile><activeProfile>_apache-snapshots_</activeProfile><activeProfile>_sonatype-snapshots_</activeProfile><activeProfile>_maven.oracle.com_</activeProfile><activeProfile>_custom_repositories_</activeProfile></activeProfiles>
 </settings>`);
 })

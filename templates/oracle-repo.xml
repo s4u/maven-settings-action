@@ -1,9 +1,6 @@
 
 <profile>
     <id>_maven.oracle.com_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>maven.oracle.com</id>

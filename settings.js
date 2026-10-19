@@ -22,12 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-const core = require('@actions/core');
-const os = require('os');
-const path = require('path');
-const fs = require('fs');
-const DOMParser = require('@xmldom/xmldom').DOMParser;
-const XMLSerializer = require('@xmldom/xmldom').XMLSerializer;
+import * as core from '@actions/core';
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function getSettingsPath() {
     const _path = core.getInput('path');
@@ -68,7 +70,7 @@ function jsonToXml(templateXml, xmlTag, json) {
     }
 }
 
-function fillServer(templateXml, templateName, id, username, password, privateKey, passphrase, filePermissions, directoryPermissions, configurations) {
+function fillServer(templateXml, templateName, id, username, password, privateKey, passphrase, filePermissions, directoryPermissions, configurations, repositoryOrigins) {
 
     if (!id || (!username && !configurations)) {
         core.setFailed(templateName + ' must contain id, and username or configuration');
@@ -105,8 +107,19 @@ function fillServer(templateXml, templateName, id, username, password, privateKe
         }
     }
 
+    const repositoryOriginsTag = serverXml.getElementsByTagName('repositoryOrigins')[0];
+    if (repositoryOrigins && repositoryOrigins.length > 0) {
+        [].concat(repositoryOrigins).forEach((repositoryOrigin) => {
+            const repositoryOriginXml = templateXml.createElement('repositoryOrigin');
+            repositoryOriginXml.textContent = repositoryOrigin;
+            repositoryOriginsTag.appendChild(repositoryOriginXml);
+        });
+    } else {
+        serverXml.documentElement.removeChild(repositoryOriginsTag);
+    }
+
     const serversXml = templateXml.getElementsByTagName('servers')[0];
-    serversXml.appendChild(serverXml);
+    while (serverXml.firstChild) serversXml.appendChild(serverXml.firstChild);
 }
 
 function fillServers(template, templateName) {
@@ -121,7 +134,7 @@ function fillServers(template, templateName) {
         fillServer(template, templateName, server.id, server.username,
             server.password, server.privateKey, server.passphrase,
             server.filePermissions, server.directoryPermissions,
-            server.configuration));
+            server.configuration, server.repositoryOrigins));
 }
 
 function fillRepository(templateXml, templateName, id, name, url, releases, snapshots) {
@@ -163,7 +176,7 @@ function fillRepository(templateXml, templateName, id, name, url, releases, snap
     }
 
     const repositoriesXml = templateXml.getElementsByTagName(templateName)[0];
-    repositoriesXml.appendChild(repositoryXml);
+    while (repositoryXml.firstChild) repositoriesXml.appendChild(repositoryXml.firstChild);
 }
 
 function fillRepositories(template) {
@@ -177,8 +190,6 @@ function fillRepositories(template) {
 
 
     const customRepositoriesTemplate = getTemplate('custom-repositories.xml');
-    const profilesXml = template.getElementsByTagName('profiles')[0];
-    profilesXml.appendChild(customRepositoriesTemplate);
 
     if (repositories) {
         JSON.parse(repositories).forEach((repository) =>
@@ -190,6 +201,9 @@ function fillRepositories(template) {
             fillRepository(customRepositoriesTemplate, 'pluginRepositories',
                 repository.id, repository.name, repository.url, repository.releases, repository.snapshots));
     }
+
+    const profilesXml = template.getElementsByTagName('profiles')[0];
+    while (customRepositoriesTemplate.firstChild) profilesXml.appendChild(customRepositoriesTemplate.firstChild);
 }
 
 function fillMirror(template, id, name, mirrorOf, url) {
@@ -206,7 +220,7 @@ function fillMirror(template, id, name, mirrorOf, url) {
     mirrorXml.getElementsByTagName('url')[0].textContent = url;
 
     const mirrorsXml = template.getElementsByTagName('mirrors')[0];
-    mirrorsXml.appendChild(mirrorXml);
+    while (mirrorXml.firstChild) mirrorsXml.appendChild(mirrorXml.firstChild);
 }
 
 function fillMirrors(template) {
@@ -253,7 +267,7 @@ function fillProxy(template, id, active, protocol, host, port, nonProxyHosts, pr
     }
     
     const proxiesXml = template.getElementsByTagName('proxies')[0];
-    proxiesXml.appendChild(proxyXml);
+    while (proxyXml.firstChild) proxiesXml.appendChild(proxyXml.firstChild);
 }
 
 function isInputTrue(inputName) {
@@ -290,14 +304,14 @@ function fillProperties(template) {
     });
 
     const profilesXml = template.getElementsByTagName('profiles')[0];
-    profilesXml.appendChild(propertiesProfileXml);
+    while (propertiesProfileXml.firstChild) profilesXml.appendChild(propertiesProfileXml.firstChild);
 
 }
 
 function addProfile(template, profileName) {
     const sonatypeXml = getTemplate(profileName);
     const profilesXml = template.getElementsByTagName('profiles')[0];
-    profilesXml.appendChild(sonatypeXml);
+    while (sonatypeXml.firstChild) profilesXml.appendChild(sonatypeXml.firstChild);
 }
 
 function addApacheSnapshots(template) {
@@ -315,6 +329,23 @@ function addSonatypeSnapshots(template) {
 function addOracleRepo(template) {
     if (isInputTrue('oracleRepo')) {
         addProfile(template, 'oracle-repo.xml')
+    }
+}
+
+function fillActiveProfiles(template) {
+
+    const activeProfilesXml = template.getElementsByTagName('activeProfiles')[0];
+    const profiles = template.getElementsByTagName('profiles')[0].getElementsByTagName('profile');
+
+    for (let i = 0; i < profiles.length; i++) {
+        const profileId = Array.from(profiles[i].childNodes).find((node) => node.nodeName == 'id');
+        const activeProfileXml = template.createElement('activeProfile');
+        activeProfileXml.textContent = profileId.textContent;
+        activeProfilesXml.appendChild(activeProfileXml);
+    }
+
+    if (profiles.length == 0) {
+        template.documentElement.removeChild(activeProfilesXml);
     }
 }
 
@@ -344,6 +375,7 @@ function generate() {
     addSonatypeSnapshots(settingsXml);
     addOracleRepo(settingsXml);
     fillRepositories(settingsXml)
+    fillActiveProfiles(settingsXml);
     writeSettings(settingsPath, settingsXml);
     core.saveState('maven-settings', 'ok');
 }
@@ -364,7 +396,7 @@ function cleanup() {
     }
 }
 
-module.exports = {
+export {
     getTemplate,
     writeSettings,
     fillMirrors,
@@ -376,6 +408,7 @@ module.exports = {
     addApacheSnapshots,
     addSonatypeSnapshots,
     addOracleRepo,
+    fillActiveProfiles,
     generate,
     cleanup
 }

@@ -1,11 +1,12 @@
 {
   "name": "maven-settings-action",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Prepare maven settings",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint index.js settings.js",
-    "test": "eslint index.js settings.js && jest --coverage",
+    "test": "eslint index.js settings.js && node --experimental-vm-modules node_modules/jest-cli/bin/jest.js --coverage",
     "version": "./update-readme.sh",
     "postversion": "git tag --delete v$npm_new_version"
   },
@@ -26,11 +27,18 @@
   },
   "homepage": "https://github.com/s4u/maven-settings-action#readme",
   "dependencies": {
-    "@actions/core": "^1.10.1",
-    "@xmldom/xmldom": "^0.8.11"
+    "@actions/core": "^3.0.1",
+    "@xmldom/xmldom": "^0.9.10"
   },
   "devDependencies": {
-    "eslint": "^9.34.0",
-    "jest": "^30.1.2"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
+    "jest": "^30.5.2"
+  },
+  "overrides": {
+    "@istanbuljs/load-nyc-config": {
+      "js-yaml": "^4.1.0"
+    }
   }
 }

@@ -22,14 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-const os = require('os');
-const process = require('process');
-const DOMParser = require('@xmldom/xmldom').DOMParser;
-const XMLSerializer = require('@xmldom/xmldom').XMLSerializer;
-const fs = require('fs');
-const path = require('path');
+import os from 'os';
+import process from 'process';
+import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
+import fs from 'fs';
+import path from 'path';
 
-const settings = require('./settings');
+import * as settings from './settings.js';
 
 var xmlTestProfile = undefined;
 
@@ -94,7 +93,7 @@ afterAll(() => {
 
 afterEach(() => {
 
-    for (key in process.env) {
+    for (const key in process.env) {
         if (key.match(/^INPUT_/) || key.match(/^GITHUB_/)) {
             delete process.env[key];
         }
@@ -237,6 +236,38 @@ test('fillServers with all attributes', () => {
     <filePermissions>664</filePermissions>
     <directoryPermissions>775</directoryPermissions>
     <configuration><prop1>prop1Value</prop1><prop2>prop2Value</prop2></configuration>
+</server></servers>`);
+});
+
+test('fillServers with repositoryOrigins', () => {
+
+    const xml = stringAsXml("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username1", "password": "password1", "repositoryOrigins": ["https://repo.example.org", "https://mirror.example.org:8443"]}]';
+
+    settings.fillServers(xml, 'servers');
+
+    expect(xmlAsString(xml)).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username1</username>
+    <password>password1</password>
+    <repositoryOrigins><repositoryOrigin>https://repo.example.org</repositoryOrigin><repositoryOrigin>https://mirror.example.org:8443</repositoryOrigin></repositoryOrigins>
+</server></servers>`);
+});
+
+test('fillServers with empty repositoryOrigins', () => {
+
+    const xml = stringAsXml("<servers/>");
+
+    process.env['INPUT_SERVERS'] = '[{"id": "id1", "username": "username1", "repositoryOrigins": []}]';
+
+    settings.fillServers(xml, 'servers');
+
+    expect(xmlAsString(xml)).toBe(`<servers>
+<server>
+    <id>id1</id>
+    <username>username1</username>
 </server></servers>`);
 });
 
@@ -545,9 +576,6 @@ test('addApacheSnapshots', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_apache-snapshots_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>apache.snapshots.https</id>
@@ -587,9 +615,6 @@ test('addSonatypeSnapshots', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_sonatype-snapshots_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>central-snapshots</id>
@@ -629,9 +654,6 @@ test('addOracleRepo', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_maven.oracle.com_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>maven.oracle.com</id>
@@ -671,9 +693,6 @@ test('fillProperties', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_properties_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <properties><propertyName1>propertyValue1</propertyName1><propertyName2>propertyValue2</propertyName2></properties>
 </profile></profiles>`);
 })
@@ -700,6 +719,48 @@ test('fillProperties do nothing if no params', () => {
             </profile>
         </profiles>
     </settings>`);
+})
+
+test('fillActiveProfiles with profiles', () => {
+
+    const xml = stringAsXml(`<settings>
+    <profiles>
+        <profile>
+            <id>profile1</id>
+            <repositories><repository><id>repo1</id></repository></repositories>
+        </profile>
+        <profile>
+            <id>profile2</id>
+        </profile>
+    </profiles>
+    <activeProfiles />
+</settings>`);
+
+    settings.fillActiveProfiles(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<settings>
+    <profiles>
+        <profile>
+            <id>profile1</id>
+            <repositories><repository><id>repo1</id></repository></repositories>
+        </profile>
+        <profile>
+            <id>profile2</id>
+        </profile>
+    </profiles>
+    <activeProfiles><activeProfile>profile1</activeProfile><activeProfile>profile2</activeProfile></activeProfiles>
+</settings>`);
+})
+
+test('fillActiveProfiles without profiles', () => {
+
+    const xml = stringAsXml(`<settings><profiles/><activeProfiles/></settings>`);
+
+    settings.fillActiveProfiles(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<settings><profiles/></settings>`);
 })
 
 test('cleanup - not generated', () => {
@@ -814,9 +875,6 @@ test('addCustomRepositories - one with snapshots one without', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_custom_repositories_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories> <repository>
      <id>repoId</id>
      <name>repoName</name>
@@ -855,9 +913,6 @@ test('addCustomPluginRepositories - one with releases and snapshots one without'
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_custom_repositories_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories/>
     <pluginRepositories> <pluginRepository>
      <id>repoId</id>
@@ -888,9 +943,6 @@ test('addCustomRepositories - fail if url is missing', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_custom_repositories_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories/>
     <pluginRepositories/>
 </profile></profiles>`);
