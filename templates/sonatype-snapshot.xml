@@ -1,9 +1,6 @@
 
 <profile>
     <id>_sonatype-snapshots_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>central-snapshots</id>

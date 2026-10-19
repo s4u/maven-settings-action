@@ -576,9 +576,6 @@ test('addApacheSnapshots', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_apache-snapshots_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>apache.snapshots.https</id>
@@ -618,9 +615,6 @@ test('addSonatypeSnapshots', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_sonatype-snapshots_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>central-snapshots</id>
@@ -660,9 +654,6 @@ test('addOracleRepo', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_maven.oracle.com_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories>
         <repository>
             <id>maven.oracle.com</id>
@@ -702,9 +693,6 @@ test('fillProperties', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_properties_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <properties><propertyName1>propertyValue1</propertyName1><propertyName2>propertyValue2</propertyName2></properties>
 </profile></profiles>`);
 })
@@ -731,6 +719,48 @@ test('fillProperties do nothing if no params', () => {
             </profile>
         </profiles>
     </settings>`);
+})
+
+test('fillActiveProfiles with profiles', () => {
+
+    const xml = stringAsXml(`<settings>
+    <profiles>
+        <profile>
+            <id>profile1</id>
+            <repositories><repository><id>repo1</id></repository></repositories>
+        </profile>
+        <profile>
+            <id>profile2</id>
+        </profile>
+    </profiles>
+    <activeProfiles />
+</settings>`);
+
+    settings.fillActiveProfiles(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<settings>
+    <profiles>
+        <profile>
+            <id>profile1</id>
+            <repositories><repository><id>repo1</id></repository></repositories>
+        </profile>
+        <profile>
+            <id>profile2</id>
+        </profile>
+    </profiles>
+    <activeProfiles><activeProfile>profile1</activeProfile><activeProfile>profile2</activeProfile></activeProfiles>
+</settings>`);
+})
+
+test('fillActiveProfiles without profiles', () => {
+
+    const xml = stringAsXml(`<settings><profiles/><activeProfiles/></settings>`);
+
+    settings.fillActiveProfiles(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<settings><profiles/></settings>`);
 })
 
 test('cleanup - not generated', () => {
@@ -845,9 +875,6 @@ test('addCustomRepositories - one with snapshots one without', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_custom_repositories_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories> <repository>
      <id>repoId</id>
      <name>repoName</name>
@@ -886,9 +913,6 @@ test('addCustomPluginRepositories - one with releases and snapshots one without'
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_custom_repositories_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories/>
     <pluginRepositories> <pluginRepository>
      <id>repoId</id>
@@ -919,9 +943,6 @@ test('addCustomRepositories - fail if url is missing', () => {
     expect(xmlStr).toBe(`<profiles>
 <profile>
     <id>_custom_repositories_</id>
-    <activation>
-        <activeByDefault>true</activeByDefault>
-    </activation>
     <repositories/>
     <pluginRepositories/>
 </profile></profiles>`);

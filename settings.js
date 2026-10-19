@@ -332,6 +332,23 @@ function addOracleRepo(template) {
     }
 }
 
+function fillActiveProfiles(template) {
+
+    const activeProfilesXml = template.getElementsByTagName('activeProfiles')[0];
+    const profiles = template.getElementsByTagName('profiles')[0].getElementsByTagName('profile');
+
+    for (let i = 0; i < profiles.length; i++) {
+        const profileId = Array.from(profiles[i].childNodes).find((node) => node.nodeName == 'id');
+        const activeProfileXml = template.createElement('activeProfile');
+        activeProfileXml.textContent = profileId.textContent;
+        activeProfilesXml.appendChild(activeProfileXml);
+    }
+
+    if (profiles.length == 0) {
+        template.documentElement.removeChild(activeProfilesXml);
+    }
+}
+
 function generate() {
 
     const settingsPath = getSettingsPath();
@@ -358,6 +375,7 @@ function generate() {
     addSonatypeSnapshots(settingsXml);
     addOracleRepo(settingsXml);
     fillRepositories(settingsXml)
+    fillActiveProfiles(settingsXml);
     writeSettings(settingsPath, settingsXml);
     core.saveState('maven-settings', 'ok');
 }
@@ -390,6 +408,7 @@ export {
     addApacheSnapshots,
     addSonatypeSnapshots,
     addOracleRepo,
+    fillActiveProfiles,
     generate,
     cleanup
 }
