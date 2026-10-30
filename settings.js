@@ -246,18 +246,28 @@ function fillProxies(template) {
 }
 
 function fillProxy(template, id, active, protocol, host, port, nonProxyHosts, proxyUser, proxyPassword) {
-    if(!id || !active || !protocol || !host || !port || !nonProxyHosts) {
-        core.setFailed('proxies must contain id, active, protocol, host, port and nonProxyHosts');
+    if (host === undefined || host === null || host === '') {
+        core.setFailed('proxies must contain host');
         return;
     }
 
     const proxyXml = getTemplate('proxy.xml');
-    proxyXml.getElementsByTagName("id")[0].textContent = id;
-    proxyXml.getElementsByTagName("active")[0].textContent = active;
-    proxyXml.getElementsByTagName("protocol")[0].textContent = protocol;
+    if (id !== undefined && id !== null) {
+        proxyXml.getElementsByTagName("id")[0].textContent = id;
+    }
+    if (active !== undefined && active !== null) {
+        proxyXml.getElementsByTagName("active")[0].textContent = active;
+    }
+    if (protocol !== undefined && protocol !== null) {
+        proxyXml.getElementsByTagName("protocol")[0].textContent = protocol;
+    }
     proxyXml.getElementsByTagName("host")[0].textContent = host;
-    proxyXml.getElementsByTagName("port")[0].textContent = port;
-    proxyXml.getElementsByTagName("nonProxyHosts")[0].textContent = nonProxyHosts;
+    if (port !== undefined && port !== null) {
+        proxyXml.getElementsByTagName("port")[0].textContent = port;
+    }
+    if (nonProxyHosts !== undefined && nonProxyHosts !== null) {
+        proxyXml.getElementsByTagName("nonProxyHosts")[0].textContent = nonProxyHosts;
+    }
 
     if(proxyUser) {
         jsonToXml(proxyXml, proxyXml.documentElement, {username: proxyUser});
