@@ -559,9 +559,28 @@ test('fillProxies incorrect fields', () => {
     expect(xmlStr).toBe('<proxies/>');
     expect(consoleOutput).toEqual(
         expect.arrayContaining([
-            expect.stringMatching(/::error::proxies must contain id, active, protocol, host, port and nonProxyHosts/)
+            expect.stringMatching(/::error::proxies must contain host/)
         ])
     );
+})
+
+test("fillProxies optional proxy fields per Maven settings XSD", () => {
+    const xml = stringAsXml("<proxies/>");
+
+    process.env['INPUT_PROXIES'] = `[{"active": "true", "protocol": "https", "host": "proxy.host", "user": "proxy_user", "password": "proxy_password", "nonProxyHosts": ""}]`;
+
+    settings.fillProxies(xml);
+
+    const xmlStr = new XMLSerializer().serializeToString(xml);
+    expect(xmlStr).toBe(`<proxies><proxy>
+    <id/>
+    <active>true</active>
+    <protocol>https</protocol>
+    <host>proxy.host</host>
+    <port/>
+    <nonProxyHosts/>
+<username>proxy_user</username><password>proxy_password</password></proxy></proxies>`)
+    expect(consoleOutput).toEqual([]);
 })
 
 test('addApacheSnapshots', () => {
